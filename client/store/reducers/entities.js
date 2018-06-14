@@ -1,39 +1,55 @@
-function updateObjectInArray(array, en) {
-    return array.map((entity) => {
-        if (entity.id !== en.id) {
-            return entity;
-        }
+import j from '../../parser';
 
-        return {
-            ...entity,
-            ...en
-        };
-    });
+console.log(j.entities);
+function updateObject(entities, entity, change) {
+    const newEntity = {
+        ...entities[`${entity.type}${entity.id}`],
+        ...change
+    };
+
+    return {
+        ...entities,
+        [`${entity.type}${entity.id}`]: newEntity
+    };
 }
+// function updateObjectInArray(array, en) {
+//     return array.map((entity) => {
+//         if (entity.id !== en.id) {
+//             return entity;
+//         }
 
-const entities = (state = [{
-    id: '1',
-    x: 20,
-    y: 30,
-    w: 375,
-    h: 667,
-    type: 'screen',
-    selected: false,
-    hovering: false,
-    image: 'https://i.imgur.com/SGCMxJN.jpg'
-}], action) => {
+//         return {
+//             ...entity,
+//             ...en
+//         };
+//     });
+// }
+
+// [{
+//     id: '1',
+//     x: 20,
+//     y: 30,
+//     w: 375,
+//     h: 667,
+//     type: 'screen',
+//     selected: false,
+//     hovering: false,
+//     image: 'https://i.imgur.com/SGCMxJN.jpg'
+// }]
+
+const entities = (state = j.entities, action) => {
     switch (action.type) {
         case 'MOUSEENTER_ENTITY':
-            return updateObjectInArray(state, { ...action.entity, hovering: true });
+            return updateObject(state, action.entity, { hovering: true });
 
         case 'MOUSELEAVE_ENTITY':
-            return updateObjectInArray(state, { ...action.entity, hovering: false });
+            return updateObject(state, action.entity, { hovering: false });
 
         case 'CLICK_ENTITY':
-            return updateObjectInArray(state, { ...action.entity, hovering: false, selected: true });
+            return updateObject(state, action.entity, { hovering: false, selected: true });
 
         case 'REPOSITION_ENTITY':
-            return updateObjectInArray(state, { ...action.entity, x: action.x, y: action.y });
+            return updateObject(state, action.entity, { position: action.position });
 
         default:
             return state;

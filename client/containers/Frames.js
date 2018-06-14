@@ -11,7 +11,7 @@ const Frames = ({ entities }) => (
     <Fragment>
         <g id="frames">
             {
-                entities.filter(en => en.selected || en.hovering).map(entity => (
+                Object.values(entities).filter(en => en.selected || en.hovering).map(entity => (
                     <Frame key={`frame-${entity.id}`} entity={entity} />
                 ))
             }
@@ -20,7 +20,7 @@ const Frames = ({ entities }) => (
 );
 
 Frames.propTypes = {
-    entities: PropTypes.array.isRequired,
+    entities: PropTypes.object.isRequired,
 };
 
 export default connect(

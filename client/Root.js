@@ -11,7 +11,7 @@ const Root = () => (
     <Provider store={store}>
         <ConnectedRouter history={History}>
             <Switch>
-                <Route path="/" component={EditorPage} />
+                <Route exact path="/" component={EditorPage} />
             </Switch>
         </ConnectedRouter>
     </Provider>

@@ -15,8 +15,8 @@ module.exports = {
 
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'dist'),
-        publicPath: '/dist/'
+        path: __dirname,
+        publicPath: '/dist',
     },
 
     devtool: 'inline-source-map',
@@ -31,8 +31,13 @@ module.exports = {
                 exclude: /node_modules/,
             },
             {
-                test: /\.(png|eot|svg|ttf|woff|woff2)$/,
-                loader: 'file-loader?name=[name].[ext]'
+                test: /\.(png|jpg|gif|svg)$/,
+                loader: 'file-loader',
+                options: {
+                    outputPath: 'dist/assets/',
+                    publicPath: 'assets',
+                    name: '[name].[ext]',
+                },
             },
             {
                 test: /\.styl$/,
@@ -66,6 +71,10 @@ module.exports = {
     ],
 
     devServer: {
+        contentBase: [
+            path.join(__dirname, 'dist'),
+            path.join(__dirname, 'public'),
+        ],
         host: 'localhost',
         port: 3001,
         historyApiFallback: true,

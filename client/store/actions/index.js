@@ -33,6 +33,7 @@ export const mouseClick = entity => ({
 export const repositionEntity = (entity, x, y) => ({
     type: 'REPOSITION_ENTITY',
     entity,
-    x,
-    y,
+    position: {
+        x, y
+    }
 });

@@ -29,30 +29,29 @@ const handlers = {
 
 const grid = storeState.globalSettings.grid;
 
-const Entity = ({ entity, onMouseEnter, onMouseLeave, onClick }) => (
+const Screen = ({ entity, onMouseEnter, onMouseLeave, onClick }) => (
     <Draggable
         grid={grid}
         disabled={entity.locked}
-        position={entity}
+        position={entity.position}
         onStart={(e, i) => handlers.onStart(entity, e, i)}
         onDrag={(e, i) => handlers.onDrag(entity, e, i)}
         onStop={(e, i) => handlers.onStop(entity, e, i)}
     >
         <g
             key={entity.id}
-            entity={entity}
             onMouseEnter={onMouseEnter}
             onMouseLeave={onMouseLeave}
             onClick={onClick}
 
         >
-            <image width={entity.w} height={entity.h} xlinkHref={entity.image} />
-            <rect width={entity.w} height={entity.h} fill="transparent" />
+            <image width={entity.size.w} height={entity.size.h} xlinkHref={entity.source.id} />
+            <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
         </g>
     </Draggable>
 );
 
-Entity.propTypes = {
+Screen.propTypes = {
     entity: PropTypes.object.isRequired,
     onMouseEnter: PropTypes.func.isRequired,
     onMouseLeave: PropTypes.func.isRequired,
@@ -62,5 +61,5 @@ Entity.propTypes = {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Entity);
+)(Screen);
 
