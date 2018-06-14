@@ -29,3 +29,10 @@ export const mouseClick = entity => ({
     type: 'CLICK_ENTITY',
     entity
 });
+
+export const repositionEntity = (entity, x, y) => ({
+    type: 'REPOSITION_ENTITY',
+    entity,
+    x,
+    y,
+});
