@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import Screen from './Screen';
+import Entity from './entities/Entity';
 
 const mapStateToProps = state => ({
     entities: state.entities,
@@ -11,7 +11,7 @@ const Entities = ({ entities }) => (
     <Fragment>
         {
             Object.values(entities).filter(en => en.type === 'screen').map(entity => (
-                <Screen key={entity.id} entity={entity} />
+                <Entity key={entity.id} entity={entity} />
             ))
         }
     </Fragment>

@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router';
 import { ConnectedRouter } from 'react-router-redux';
 import store from './store';
 import { EditorPage } from './pages';
-import { PageRoutes } from './store/actions';
 import History from './modules/History';
 
 const Root = () => (

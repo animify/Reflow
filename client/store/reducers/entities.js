@@ -40,6 +40,7 @@ function updateObject(entities, entity, change) {
 const entities = (state = j.entities, action) => {
     switch (action.type) {
         case 'MOUSEENTER_ENTITY':
+            console.log('entering');
             return updateObject(state, action.entity, { hovering: true });
 
         case 'MOUSELEAVE_ENTITY':

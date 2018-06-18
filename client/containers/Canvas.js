@@ -17,14 +17,14 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 const Canvas = ({ entities }) => (
     <div className="renderer">
-        <ReactSVGPanZoom width={617} height={316}>
-            <svg id="renderer" xmlns="http://www.w3.org/2000/svg" width={617} height={316} preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink">
-                <g id="renderer-controller">
-                    <Entities entities={entities} />
-                    <Frames entities={entities} />
-                </g>
-            </svg>
-        </ReactSVGPanZoom>
+        {/* <ReactSVGPanZoom width={617} height={316}> */}
+        <svg id="renderer" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink">
+            <g id="renderer-controller">
+                <Entities entities={entities} />
+                <Frames entities={entities} />
+            </g>
+        </svg>
+        {/* </ReactSVGPanZoom> */}
     </div>
 );
 
