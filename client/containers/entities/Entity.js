@@ -8,9 +8,7 @@ import EntityMapper from './EntityMapper';
 
 const storeState = store.getState();
 
-const mapStateToProps = state => ({
-    entities: state.entities,
-});
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onMouseEnter: () => dispatch(mouseEnter(`${ownProps.entity.type}${ownProps.entity.id}`)),
@@ -28,7 +26,7 @@ const handlers = {
     }
 };
 
-const grid = storeState.globalSettings.grid;
+const grid = storeState.settings.grid;
 
 const Entity = ({ entity, onMouseEnter, onMouseLeave, onClick }) => {
     const style = {

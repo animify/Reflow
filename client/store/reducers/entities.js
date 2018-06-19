@@ -1,7 +1,4 @@
 import produce from 'immer';
-import j from '../../parser';
-
-console.log(j.entities);
 
 const entities = produce((draft, action) => {
     switch (action.type) {
@@ -24,7 +21,7 @@ const entities = produce((draft, action) => {
             };
             break;
     }
-}, j.entities);
+});
 
 export default entities;
 
