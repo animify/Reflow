@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Frame from './Frame';
 
 const mapStateToProps = state => ({
-    entities: state.entities,
+    entities: state.entities.present,
 });
 
 const Frames = ({ entities }) => (

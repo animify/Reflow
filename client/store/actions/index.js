@@ -3,7 +3,7 @@ export const PageRoutes = {
 };
 
 export const newEntity = ({ _id, summary, details, status, category, by, votes, created, comments }) => ({
-    type: 'NEW_ENTITY',
+    type: 'ENTITY::NEW',
     _id,
     summary,
     status,
@@ -16,22 +16,22 @@ export const newEntity = ({ _id, summary, details, status, category, by, votes, 
 });
 
 export const mouseEnter = entity => ({
-    type: 'MOUSEENTER_ENTITY',
+    type: 'ENTITY::MOUSEENTER',
     entity
 });
 
 export const mouseLeave = entity => ({
-    type: 'MOUSELEAVE_ENTITY',
+    type: 'ENTITY::MOUSELEAVE',
     entity
 });
 
 export const mouseClick = entity => ({
-    type: 'CLICK_ENTITY',
+    type: 'ENTITY::CLICK',
     entity
 });
 
 export const repositionEntity = (entity, x, y) => ({
-    type: 'REPOSITION_ENTITY',
+    type: 'ENTITY::REPOSITION',
     entity,
     position: {
         x, y

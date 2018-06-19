@@ -28,20 +28,17 @@ export default class Screen extends Component {
     render() {
         const { entity } = this.props;
         const { innerElements } = this.state;
-        const e = () => {
-            console.log('dddd');
-        };
         return (
             <Fragment>
                 <image width={entity.size.w} height={entity.size.h} xlinkHref={entity.source.id} />
-                {innerElements.map(ie => (
+                {entity.hovering && innerElements.map(ie => (
                     <rect
                         key={ie.id}
                         x={ie.x}
                         y={ie.y}
                         width={ie.w}
                         height={ie.h}
-                        onMouseEnter={() => console.log('dddd')}
+                        onMouseEnter={() => this.hoverInnerElement(ie)}
                         style={{
                             stroke: ie.hovering ? 'red' : 'none',
                             strokeWidth: 2,
