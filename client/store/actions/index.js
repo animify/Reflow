@@ -15,25 +15,23 @@ export const newEntity = ({ _id, summary, details, status, category, by, votes, 
     comments,
 });
 
-export const mouseEnter = entity => ({
+export const mouseEnter = id => ({
     type: 'ENTITY::MOUSEENTER',
-    entity
+    id
 });
 
-export const mouseLeave = entity => ({
+export const mouseLeave = id => ({
     type: 'ENTITY::MOUSELEAVE',
-    entity
+    id
 });
 
-export const mouseClick = entity => ({
+export const mouseClick = id => ({
     type: 'ENTITY::CLICK',
-    entity
+    id
 });
 
-export const repositionEntity = (entity, x, y) => ({
-    type: 'ENTITY::REPOSITION',
-    entity,
-    position: {
-        x, y
-    }
+export const updateEntity = (id, payload) => ({
+    type: 'ENTITY::UPDATE',
+    id,
+    payload
 });

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
-import { mouseEnter, mouseLeave, mouseClick, repositionEntity } from '../../store/actions';
+import { mouseEnter, mouseLeave, mouseClick, updateEntity } from '../../store/actions';
 import store from '../../store';
 import EntityMapper from './EntityMapper';
 
@@ -13,9 +13,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onMouseEnter: () => dispatch(mouseEnter(ownProps.entity)),
-    onMouseLeave: () => dispatch(mouseLeave(ownProps.entity)),
-    onClick: () => dispatch(mouseClick(ownProps.entity)),
+    onMouseEnter: () => dispatch(mouseEnter(`${ownProps.entity.type}${ownProps.entity.id}`)),
+    onMouseLeave: () => dispatch(mouseLeave(`${ownProps.entity.type}${ownProps.entity.id}`)),
+    onClick: () => dispatch(mouseClick(`${ownProps.entity.type}${ownProps.entity.id}`)),
 });
 
 const handlers = {
@@ -24,7 +24,7 @@ const handlers = {
     onDrag: () => {
     },
     onStop: (entity, e, i) => {
-        store.dispatch(repositionEntity(entity, i.x, i.y));
+        store.dispatch(updateEntity(`${entity.type}${entity.id}`, { position: { x: i.x, y: i.y } }));
     }
 };
 

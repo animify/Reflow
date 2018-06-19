@@ -1,37 +1,30 @@
+import produce from 'immer';
 import j from '../../parser';
 
 console.log(j.entities);
-function updateObject(entities, entity, change) {
-    const newEntity = {
-        ...entities[`${entity.type}${entity.id}`],
-        ...change
-    };
 
-    return {
-        ...entities,
-        [`${entity.type}${entity.id}`]: newEntity
-    };
-}
-
-const entities = (state = j.entities, action) => {
+const entities = produce((draft, action) => {
     switch (action.type) {
         case 'ENTITY::MOUSEENTER':
-            console.log('entering');
-            return updateObject(state, action.entity, { hovering: true });
+            draft[action.id].hovering = true;
+            break;
 
         case 'ENTITY::MOUSELEAVE':
-            return updateObject(state, action.entity, { hovering: false });
-
+            draft[action.id].hovering = false;
+            break;
         case 'ENTITY::CLICK':
-            return updateObject(state, action.entity, { hovering: false, selected: true });
+            draft[action.id].hovering = false;
+            draft[action.id].selected = true;
+            break;
 
-        case 'ENTITY::REPOSITION':
-            return updateObject(state, action.entity, { position: action.position });
-
-        default:
-            return state;
+        case 'ENTITY::UPDATE':
+            draft[action.id] = {
+                ...draft[action.id],
+                ...action.payload
+            };
+            break;
     }
-};
+}, j.entities);
 
 export default entities;
 

@@ -15,7 +15,7 @@ export default class Screen extends Component {
 
     hoverInnerElement(ie) {
         const { innerElements } = this.state;
-        const innerElement = this.state.innerElements.findIndex(e => e.id === ie.id);
+        const innerElement = innerElements.findIndex(e => e.id === ie.id);
 
         innerElements[innerElement].hovering = true;
 
@@ -31,7 +31,7 @@ export default class Screen extends Component {
         return (
             <Fragment>
                 <image width={entity.size.w} height={entity.size.h} xlinkHref={entity.source.id} />
-                {entity.hovering && innerElements.map(ie => (
+                {(entity.hovering || entity.selected) && innerElements.map(ie => (
                     <rect
                         key={ie.id}
                         x={ie.x}
