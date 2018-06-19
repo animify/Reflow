@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import DraggableCore from 'react-draggable';
+import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
 import { mouseEnter, mouseLeave, mouseClick, updateEntity } from '../../store/actions';
 import store from '../../store';
@@ -36,10 +36,8 @@ class Entity extends PureComponent {
             height: entity.size.h,
         };
 
-        console.log(entity.position);
-
         return (
-            <DraggableCore
+            <Draggable
                 grid={grid}
                 disabled={entity.locked}
                 position={entity.position}
@@ -60,7 +58,7 @@ class Entity extends PureComponent {
                     <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
                     <EntityMapper entity={entity} />
                 </g>
-            </DraggableCore>
+            </Draggable>
         );
     }
 }

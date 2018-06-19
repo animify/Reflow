@@ -1,8 +1,8 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import produce from 'immer';
 
-export default class Screen extends Component {
+export default class Screen extends PureComponent {
     constructor() {
         super();
 
