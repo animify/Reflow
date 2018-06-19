@@ -1,22 +1,17 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 
-const mapStateToProps = state => ({
-    entities: state.entities,
-});
+export default class Frame extends PureComponent {
+    render() {
+        const { entity } = this.props;
+        return (
+            <g key={entity.id} transform={`translate(${entity.position.x}, ${entity.position.y})`}>
+                <rect strokeWidth="1.5" stroke={entity.selected ? 'blue' : 'pink'} width={entity.size.w} height={entity.size.h} fill="none" />
+            </g>
+        );
+    }
+}
 
-const Entity = ({ entity }) => (
-    <g key={entity.id} entity={entity} transform={`translate(${entity.x}, ${entity.y})`}>
-        <rect strokeWidth="1.5" stroke={entity.selected ? 'blue' : 'pink'} width={entity.w} height={entity.h} fill="none" />
-    </g>
-);
-
-Entity.propTypes = {
+Frame.propTypes = {
     entity: PropTypes.object.isRequired,
 };
-
-export default connect(
-    mapStateToProps,
-)(Entity);
-

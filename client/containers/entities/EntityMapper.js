@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import Screen from './Screen';
 
@@ -11,14 +11,15 @@ const entityMap = {
     }
 };
 
-const EntityMapper = ({ entity }) => {
-    const EntityType = entityMap[entity.type].component;
+export default class EntityMapper extends PureComponent {
+    render() {
+        const { entity } = this.props;
+        const EntityType = entityMap[entity.type].component;
 
-    return <EntityType entity={entity} />;
-};
+        return <EntityType entity={entity} />;
+    }
+}
 
 EntityMapper.propTypes = {
     entity: PropTypes.object.isRequired
 };
-
-export default EntityMapper;

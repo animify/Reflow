@@ -12,7 +12,6 @@ const keyMap = {
     redo: 'ctrl+shift+z',
 };
 
-
 const mapStateToProps = state => ({
     entities: state.entities,
 });
@@ -22,6 +21,9 @@ const mapDispatchToProps = dispatch => ({
     onRedo: () => dispatch(ActionCreators.redo()),
 });
 
+const onWheel = () => {
+    console.log('wheel');
+};
 
 const Canvas = ({ entities, onUndo, onRedo }) => {
     const handlers = {
@@ -30,15 +32,15 @@ const Canvas = ({ entities, onUndo, onRedo }) => {
     };
 
     return (
-        <HotKeys keyMap={keyMap} handlers={handlers}>
-            <div className="renderer">
-                <svg id="renderer" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink">
-                    <g id="renderer-controller">
-                        <Entities entities={entities} />
-                        <Frames entities={entities} />
-                    </g>
-                </svg>
-            </div>
+        <HotKeys className="renderer" keyMap={keyMap} handlers={handlers} onWheel={onWheel}>
+            <svg id="renderer" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink">
+                <g id="renderer-controller">
+                    <Entities entities={entities} />
+                </g>
+            </svg>
+            <svg id="renderer-overlay" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink">
+                <Frames entities={entities} />
+            </svg>
         </HotKeys>
     );
 };

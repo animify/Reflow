@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import Draggable from 'react-draggable';
+import DraggableCore from 'react-draggable';
 import PropTypes from 'prop-types';
 import { mouseEnter, mouseLeave, mouseClick, updateEntity } from '../../store/actions';
 import store from '../../store';
@@ -28,34 +28,42 @@ const handlers = {
 
 const grid = storeState.settings.grid;
 
-const Entity = ({ entity, onMouseEnter, onMouseLeave, onClick }) => {
-    const style = {
-        width: entity.size.h,
-        height: entity.size.h,
-    };
+class Entity extends PureComponent {
+    render() {
+        const { entity, onMouseEnter, onMouseLeave, onClick } = this.props;
+        const style = {
+            width: entity.size.h,
+            height: entity.size.h,
+        };
 
-    return (
-        <Draggable
-            grid={grid}
-            disabled={entity.locked}
-            position={entity.position}
-            onStart={(e, i) => handlers.onStart(entity, e, i)}
-            onDrag={(e, i) => handlers.onDrag(entity, e, i)}
-            onStop={(e, i) => handlers.onStop(entity, e, i)}
-        >
-            <g
-                key={entity.id}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
-                onClick={onClick}
-                style={style}
+        console.log(entity.position);
+
+        return (
+            <DraggableCore
+                grid={grid}
+                disabled={entity.locked}
+                position={entity.position}
+                onStart={(e, i) => handlers.onStart(entity, e, i)}
+                onDrag={(e, i) => handlers.onDrag(entity, e, i)}
+                onStop={(e, i) => handlers.onStop(entity, e, i)}
+                defaultClassName={''}
+                defaultClassNameDragging={''}
+                defaultClassNameDragged={''}
             >
-                <EntityMapper entity={entity} />
-                <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
-            </g>
-        </Draggable>
-    );
-};
+                <g
+                    key={entity.id}
+                    onMouseEnter={onMouseEnter}
+                    onMouseLeave={onMouseLeave}
+                    onClick={onClick}
+                    style={style}
+                >
+                    <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
+                    <EntityMapper entity={entity} />
+                </g>
+            </DraggableCore>
+        );
+    }
+}
 
 Entity.propTypes = {
     entity: PropTypes.object.isRequired,

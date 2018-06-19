@@ -1,5 +1,6 @@
 import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
+import produce from 'immer';
 
 export default class Screen extends Component {
     constructor() {
@@ -7,42 +8,39 @@ export default class Screen extends Component {
 
         this.hoverInnerElement = this.hoverInnerElement.bind(this);
     }
+
     componentWillMount() {
         this.setState({
             innerElements: this.props.entity.innerElements
         });
     }
 
-    hoverInnerElement(ie) {
-        const { innerElements } = this.state;
-        const innerElement = innerElements.findIndex(e => e.id === ie.id);
-
-        innerElements[innerElement].hovering = true;
-
-        console.log(innerElements[innerElement]);
-        this.setState({
-            innerElements
-        });
+    hoverInnerElement(id, payload) {
+        this.setState(produce((draft) => {
+            draft.innerElements[draft.innerElements.findIndex(e => e.id === id)].hovering = payload;
+        }));
     }
 
     render() {
         const { entity } = this.props;
         const { innerElements } = this.state;
+
         return (
             <Fragment>
                 <image width={entity.size.w} height={entity.size.h} xlinkHref={entity.source.id} />
-                {(entity.hovering || entity.selected) && innerElements.map(ie => (
+                {innerElements.map(ie => (
                     <rect
                         key={ie.id}
                         x={ie.x}
                         y={ie.y}
                         width={ie.w}
                         height={ie.h}
-                        onMouseEnter={() => this.hoverInnerElement(ie)}
+                        onMouseEnter={() => this.hoverInnerElement(ie.id, true)}
+                        onMouseLeave={() => this.hoverInnerElement(ie.id, false)}
                         style={{
                             stroke: ie.hovering ? 'red' : 'none',
-                            strokeWidth: 2,
-                            fill: 'rgba(0,0,0,.1)',
+                            strokeWidth: 1,
+                            fill: 'transparent',
                             width: ie.w,
                             height: ie.h
                         }}
