@@ -21,6 +21,9 @@ const entities = produce((draft, action) => {
                 ...action.payload
             };
             break;
+
+        case 'ENTITY::SET':
+            return action.payload;
     }
 });
 

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { HotKeys } from 'react-hotkeys';
 import { ActionCreators } from 'redux-undo';
 import PropTypes from 'prop-types';
+import produce from 'immer';
 import Entities from './Entities';
 import Frames from './Frames';
 import { pan, zoom } from '../store/actions';
@@ -30,7 +31,7 @@ const keyHandlers = {
 const mapStateToProps = state => ({
     canvas: state.canvas,
     settings: state.settings,
-    title: state.title,
+    boards: state.boards,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -49,6 +50,13 @@ class Canvas extends PureComponent {
         this.zoom = this.zoom.bind(this);
     }
 
+    componentWillMount() {
+        this.setState({
+            matrix: document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGMatrix(),
+            scale: 1
+        });
+    }
+
     componentDidMount() {
         this.svgRenderer.addEventListener('wheel', this.onWheel, { passive: true });
     }
@@ -58,24 +66,27 @@ class Canvas extends PureComponent {
     }
 
     onWheel(e) {
+        const data = this.state;
+        // const data = this.props.canvas;
+
         if (isCmdDown) {
             const wD = e.wheelDelta;
             const dY = e.deltaY;
             const delta = wD || dY * -1;
             let multiplier = scaleWheelDelta(delta, e.ctrlKey, true);
-            let futureScale = this.props.canvas.scale * multiplier;
+            let futureScale = data.scale * multiplier;
 
             if (futureScale >= 4) {
                 futureScale = 4;
-                multiplier = futureScale / this.props.canvas.scale;
+                multiplier = futureScale / data.scale;
             }
 
             if (futureScale <= 0.05) {
                 futureScale = 0.05;
-                multiplier = futureScale / this.props.canvas.scale;
+                multiplier = futureScale / data.scale;
             }
             if (futureScale <= 4 && futureScale >= 0.05) {
-                const point = clientPoint(this.svgRenderer, { x: e.clientX, y: e.clientY }, this.props.canvas.matrix);
+                const point = clientPoint(this.svgRenderer, { x: e.clientX, y: e.clientY }, data.matrix);
                 this.zoom(point, multiplier);
             }
         } else {
@@ -84,18 +95,27 @@ class Canvas extends PureComponent {
     }
 
     pan(x, y) {
-        const newMatrix = this.props.canvas.matrix.translate(x, y);
-        this.props.pan(newMatrix);
+        this.setState(produce((draft) => {
+            draft.matrix = draft.matrix.translate(x, y);
+        }));
+
+        // const newMatrix = this.props.canvas.matrix.translate(x, y);
+        // this.props.pan(newMatrix);
     }
 
     zoom(point, multiplier) {
-        const newMatrix = this.props.canvas.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
-        this.props.zoom(newMatrix, this.props.canvas.scale * multiplier);
+        this.setState(produce((draft) => {
+            draft.matrix = draft.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
+            draft.scale *= multiplier;
+        }));
+
+        // const newMatrix = this.props.canvas.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
+        // this.props.zoom(newMatrix, this.props.canvas.scale * multiplier);
     }
 
     render() {
-        const { onUndo, onRedo, canvas, settings, title } = this.props;
-        const { matrix } = this.state;
+        const { onUndo, onRedo, canvas, settings, boards } = this.props;
+        const { matrix, scale } = this.state;
         const handlers = {
             ...keyHandlers,
             undo: onUndo,
@@ -105,8 +125,8 @@ class Canvas extends PureComponent {
         return (
             <HotKeys className="renderer" keyMap={keyMap} handlers={handlers} focused>
                 <div className="stats">
-                    <p><strong>Board:</strong> {title}</p>
-                    <p><strong>Scale:</strong> {canvas.scale}</p>
+                    <p><strong>Board:</strong> {boards.currentPage}</p>
+                    <p><strong>Scale:</strong> {scale}</p>
                     <p><strong>Grid:</strong> {settings.grid == null ? 'N/A' : settings.grid.enabled}</p>
                 </div>
                 <svg id="renderer" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink" ref={(ref) => { this.svgRenderer = ref; }}>
@@ -126,7 +146,7 @@ class Canvas extends PureComponent {
 
 Canvas.propTypes = {
     settings: PropTypes.object.isRequired,
-    title: PropTypes.string.isRequired,
+    boards: PropTypes.object.isRequired,
     canvas: PropTypes.object.isRequired,
     onUndo: PropTypes.func.isRequired,
     onRedo: PropTypes.func.isRequired,

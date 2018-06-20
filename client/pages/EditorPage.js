@@ -1,11 +1,15 @@
 
-import React, { Fragment } from 'react';
+import React from 'react';
 import Canvas from '../containers/Canvas';
+import Boards from '../containers/Boards';
 
 const EditorPage = () => (
-    <Fragment>
+    <div id="layout">
+        <div id="panel">
+            <Boards />
+        </div>
         <Canvas />
-    </Fragment>
+    </div>
 );
 
 export default EditorPage;

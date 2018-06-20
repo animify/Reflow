@@ -18,3 +18,8 @@ export const updateEntity = (id, payload) => ({
     id,
     payload
 });
+
+export const setEntities = payload => ({
+    type: 'ENTITY::SET',
+    payload
+});
