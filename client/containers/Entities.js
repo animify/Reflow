@@ -7,11 +7,11 @@ const mapStateToProps = state => ({
     entities: state.entities.present,
 });
 
-const Entities = ({ entities }) => (
+const Entities = ({ entities, scale }) => (
     <Fragment>
         {
             Object.values(entities).filter(en => en.type === 'screen' || en.type === 'link').map(entity => (
-                <Entity key={entity.id} entity={entity} />
+                <Entity key={entity.id} entity={entity} scale={scale} />
             ))
         }
     </Fragment>
@@ -19,6 +19,7 @@ const Entities = ({ entities }) => (
 
 Entities.propTypes = {
     entities: PropTypes.object.isRequired,
+    scale: PropTypes.number.isRequired,
 };
 
 export default connect(

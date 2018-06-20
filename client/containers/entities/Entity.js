@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
-import Draggable from 'react-draggable';
 import PropTypes from 'prop-types';
+import Draggable from '../Draggable';
 import { mouseEnter, mouseLeave, mouseClick, updateEntity } from '../../store/actions';
 import store from '../../store';
 import EntityMapper from './EntityMapper';
@@ -24,6 +24,7 @@ const handlers = {
     onDrag: () => {
     },
     onStop: (entity, e, i) => {
+        console.log(e, i);
         store.dispatch(updateEntity(`${entity.type}${entity.id}`, { position: { x: i.x, y: i.y } }));
     }
 };
@@ -31,7 +32,7 @@ const handlers = {
 class Entity extends PureComponent {
     render() {
         const { canvas } = this.props;
-        const { entity, onMouseEnter, onMouseLeave, onClick } = this.props;
+        const { entity, onMouseEnter, onMouseLeave, onClick, scale } = this.props;
         const style = {
             width: entity.size.h,
             height: entity.size.h,
@@ -45,9 +46,7 @@ class Entity extends PureComponent {
                 onStart={(e, i) => handlers.onStart(entity, e, i)}
                 onDrag={(e, i) => handlers.onDrag(entity, e, i)}
                 onStop={(e, i) => handlers.onStop(entity, e, i)}
-                defaultClassName={''}
-                defaultClassNameDragging={''}
-                defaultClassNameDragged={''}
+                scale={scale}
             >
                 <g
                     key={entity.id}
@@ -68,6 +67,7 @@ Entity.propTypes = {
     entity: PropTypes.object.isRequired,
     settings: PropTypes.object.isRequired,
     canvas: PropTypes.object.isRequired,
+    scale: PropTypes.number.isRequired,
     onMouseEnter: PropTypes.func.isRequired,
     onMouseLeave: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired,

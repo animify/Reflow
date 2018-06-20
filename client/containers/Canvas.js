@@ -15,8 +15,8 @@ const keyMap = {
     undo: 'mod+z',
     redo: 'mod+shift+z',
     mod: 'mod',
-    commandDown: { sequence: 'mod', action: 'keydown' },
-    commandUp: { sequence: 'mod', action: 'keyup' },
+    commandDown: { sequence: 'alt', action: 'keydown' },
+    commandUp: { sequence: 'alt', action: 'keyup' },
 };
 
 const keyHandlers = {
@@ -131,7 +131,7 @@ class Canvas extends PureComponent {
                 </div>
                 <svg id="renderer" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink" ref={(ref) => { this.svgRenderer = ref; }}>
                     <g transform={`matrix(${matrix.a} ${matrix.b} ${matrix.c} ${matrix.d} ${matrix.e} ${matrix.f})`}>
-                        <Entities />
+                        <Entities scale={scale} />
                     </g>
                 </svg>
                 <svg id="renderer-overlay" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink">
