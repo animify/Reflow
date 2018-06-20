@@ -1,3 +1,29 @@
+@import 'nib';
+
+global-reset();
+
+* > * {
+    cursor: default;
+    user-select: none;
+}
+
+html {
+    height: 100%;
+    width: 100%;
+    font-size: 62.5%;
+}
+
+body {
+    overflow: hidden;
+    fixed: top left;
+    font-family: 'Avenir';
+    font-size: 1rem;
+}
+
+strong {
+    font-weight: 600;
+}
+
 #renderer, #renderer-overlay {
     position: fixed;
     top: 0;
@@ -12,4 +38,19 @@
 
 #renderer-overlay {
     pointer-events: none;
+}
+
+.stats {
+    background-color: rgba(23, 25, 32, 0.83);
+    fixed: bottom right;
+    padding: 16px;
+    z-index: 4000;
+    width: fit-content;
+    text-align: right;
+    border-radius: 8px 0 0;
+    color: #fff;
+
+    p + p {
+        margin-top: 4px;
+    }
 }

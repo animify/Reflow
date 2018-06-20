@@ -9,6 +9,7 @@ const entities = produce((draft, action) => {
         case 'ENTITY::MOUSELEAVE':
             draft[action.id].hovering = false;
             break;
+
         case 'ENTITY::CLICK':
             draft[action.id].hovering = false;
             draft[action.id].selected = true;
