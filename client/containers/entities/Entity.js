@@ -30,21 +30,16 @@ const handlers = {
 
 class Entity extends PureComponent {
     render() {
-        const { settings, canvas } = this.props;
+        const { canvas } = this.props;
         const { entity, onMouseEnter, onMouseLeave, onClick } = this.props;
         const style = {
             width: entity.size.h,
             height: entity.size.h,
         };
 
-        return (checkVisible({
-            top: entity.position.y,
-            left: entity.position.x,
-            right: entity.position.x + entity.size.w,
-            bottom: entity.position.y + entity.size.h
-        }, canvas) ?
+        return (
             <Draggable
-                grid={settings.grid}
+                grid={null}
                 disabled={entity.locked}
                 position={entity.position}
                 onStart={(e, i) => handlers.onStart(entity, e, i)}
@@ -64,7 +59,7 @@ class Entity extends PureComponent {
                     <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
                     <EntityMapper entity={entity} />
                 </g>
-            </Draggable> : null
+            </Draggable>
         );
     }
 }

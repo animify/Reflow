@@ -1,3 +1,9 @@
-import testJson from '../data/j.json';
+import sample from '../data/sample.json';
 
-export default testJson.pages['6E225634-77FD-494A-AA54-DAD9DD4CA5F8'];
+console.log(sample.pages[sample.currentPage].entities);
+
+export default {
+    title: sample.currentPage,
+    settings: sample.settings,
+    entities: sample.pages[sample.currentPage].entities
+};

@@ -1,8 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { AppContainer } from 'react-hot-loader';
-import './stylekit/style.styl';
 import Root from './Root';
+import './stylekit/style.styl';
 
 const initialRoot = <Root />;
 

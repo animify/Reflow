@@ -10,7 +10,7 @@ const mapStateToProps = state => ({
 const Entities = ({ entities }) => (
     <Fragment>
         {
-            Object.values(entities).filter(en => en.type === 'screen').map(entity => (
+            Object.values(entities).filter(en => en.type === 'screen' || en.type === 'link').map(entity => (
                 <Entity key={entity.id} entity={entity} />
             ))
         }

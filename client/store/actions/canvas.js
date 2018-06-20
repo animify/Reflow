@@ -1,9 +1,12 @@
-export const pan = (x, y) => ({
+export const pan = matrix => ({
     type: 'CANVAS::PAN',
-    payload: { x, y }
+    payload: { matrix }
 });
 
-export const zoom = (x, y, scale) => ({
+export const zoom = (matrix, scale) => ({
     type: 'CANVAS::ZOOM',
-    payload: { x, y, scale }
+    payload: {
+        matrix,
+        scale
+    }
 });

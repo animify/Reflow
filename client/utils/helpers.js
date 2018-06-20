@@ -26,3 +26,43 @@ export const clientPoint = (targetSvg, point, matrix) => {
     return initialPoint.matrixTransform(matrix.inverse());
 };
 
+export const getBoundingbox = (entities) => {
+    const lefts = [];
+    const tops = [];
+    const rights = [];
+    const bottoms = [];
+
+    entities.forEach((entity) => {
+        const bounds = {
+            top: entity.position.y,
+            left: entity.position.x,
+            bottom: entity.position.y + entity.size.h,
+            right: entity.position.x + entity.size.w,
+        };
+
+        lefts.push(bounds.left);
+        tops.push(bounds.top);
+        rights.push(bounds.right);
+        bottoms.push(bounds.bottom);
+    });
+
+    let left = Math.min(...lefts);
+    let top = Math.min(...tops);
+    let right = Math.max(...rights);
+    let bottom = Math.max(...bottoms);
+
+    left = isFinite(left) ? left : 0;
+    top = isFinite(top) ? top : 0;
+    right = isFinite(right) ? right : 0;
+    bottom = isFinite(bottom) ? bottom : 0;
+
+    return {
+        left,
+        top,
+        right,
+        bottom,
+        width: right - left,
+        height: bottom - top,
+    };
+};
+

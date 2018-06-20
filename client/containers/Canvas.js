@@ -31,14 +31,13 @@ const mapStateToProps = state => ({
     canvas: state.canvas,
     settings: state.settings,
     title: state.title,
-    entities: state.entities,
 });
 
 const mapDispatchToProps = dispatch => ({
     onUndo: () => dispatch(ActionCreators.undo()),
     onRedo: () => dispatch(ActionCreators.redo()),
     pan: (x, y) => dispatch(pan(x, y)),
-    zoom: (x, y, s) => dispatch(zoom(x, y, s)),
+    zoom: (matrix, multiplier) => dispatch(zoom(matrix, multiplier)),
 });
 
 class Canvas extends PureComponent {
@@ -63,60 +62,61 @@ class Canvas extends PureComponent {
             const wD = e.wheelDelta;
             const dY = e.deltaY;
             const delta = wD || dY * -1;
+            let multiplier = scaleWheelDelta(delta, e.ctrlKey, true);
+            let futureScale = this.props.canvas.scale * multiplier;
 
-            const distance = scaleWheelDelta(delta, e.ctrlKey, true);
-            this.zoom(distance, e);
+            if (futureScale >= 4) {
+                futureScale = 4;
+                multiplier = futureScale / this.props.canvas.scale;
+            }
+
+            if (futureScale <= 0.05) {
+                futureScale = 0.05;
+                multiplier = futureScale / this.props.canvas.scale;
+            }
+            if (futureScale <= 4 && futureScale >= 0.05) {
+                const point = clientPoint(this.svgRenderer, { x: e.clientX, y: e.clientY }, this.props.canvas.matrix);
+                this.zoom(point, multiplier);
+            }
         } else {
             this.pan(e.deltaX * -1, e.deltaY * -1);
         }
     }
 
     pan(x, y) {
-        this.props.pan(x, y);
+        const newMatrix = this.props.canvas.matrix.translate(x, y);
+        this.props.pan(newMatrix);
     }
 
-    zoom(scale, e) {
-        let futureScale = this.props.canvas.scale * scale;
-
-        if (futureScale >= 4) {
-            futureScale = 4;
-            scale = futureScale / this.props.canvas.scale;
-        }
-
-        if (futureScale <= 0.05) {
-            futureScale = 0.05;
-            scale = futureScale / this.props.canvas.scale;
-        }
-        if (futureScale <= 4 && futureScale >= 0.05) {
-            const point = clientPoint(this.svgRenderer, { x: e.clientX, y: e.clientY }, this.props.canvas.matrix);
-            this.props.zoom(point.x, point.y, scale);
-        }
+    zoom(point, multiplier) {
+        const newMatrix = this.props.canvas.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
+        this.props.zoom(newMatrix, this.props.canvas.scale * multiplier);
     }
 
     render() {
-        const { entities, onUndo, onRedo, canvas, settings, title } = this.props;
-        const matrix = canvas.matrix;
+        const { onUndo, onRedo, canvas, settings, title } = this.props;
+        const { matrix } = this.state;
         const handlers = {
             ...keyHandlers,
             undo: onUndo,
             redo: onRedo
         };
+
         return (
             <HotKeys className="renderer" keyMap={keyMap} handlers={handlers} focused>
                 <div className="stats">
                     <p><strong>Board:</strong> {title}</p>
                     <p><strong>Scale:</strong> {canvas.scale}</p>
-                    <p><strong>Grid:</strong> {settings.grid == null ? 'N/A' : settings.grid}</p>
-                    <p><strong>Entities:</strong> {Object.keys(entities).length}</p>
+                    <p><strong>Grid:</strong> {settings.grid == null ? 'N/A' : settings.grid.enabled}</p>
                 </div>
                 <svg id="renderer" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink" ref={(ref) => { this.svgRenderer = ref; }}>
                     <g transform={`matrix(${matrix.a} ${matrix.b} ${matrix.c} ${matrix.d} ${matrix.e} ${matrix.f})`}>
-                        <Entities entities={entities} />
+                        <Entities />
                     </g>
                 </svg>
                 <svg id="renderer-overlay" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink">
                     <g transform={`matrix(${matrix.a} ${matrix.b} ${matrix.c} ${matrix.d} ${matrix.e} ${matrix.f})`}>
-                        <Frames entities={entities} />
+                        <Frames />
                     </g>
                 </svg>
             </HotKeys>
@@ -125,7 +125,6 @@ class Canvas extends PureComponent {
 }
 
 Canvas.propTypes = {
-    entities: PropTypes.object.isRequired,
     settings: PropTypes.object.isRequired,
     title: PropTypes.string.isRequired,
     canvas: PropTypes.object.isRequired,
