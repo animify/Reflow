@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Canvas from '../containers/Canvas';
-import Boards from '../containers/Boards';
+import Boards from '../containers/boards/Boards';
 
 const EditorPage = () => (
     <div id="layout">

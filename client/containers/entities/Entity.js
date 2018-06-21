@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { mouseEnter, mouseLeave, mouseClick, updateEntity } from '../../store/actions';
 import store from '../../store';
 import EntityMapper from './EntityMapper';
-import { checkVisible } from '../../utils/helpers';
+// import { checkVisible } from '../../utils/helpers';
 
 const mapStateToProps = state => ({
     settings: state.settings,
@@ -30,7 +30,7 @@ const handlers = {
 
 class Entity extends PureComponent {
     render() {
-        const { canvas } = this.props;
+        // const { canvas } = this.props;
         const { entity, onMouseEnter, onMouseLeave, onClick } = this.props;
         const style = {
             width: entity.size.h,
@@ -66,8 +66,8 @@ class Entity extends PureComponent {
 
 Entity.propTypes = {
     entity: PropTypes.object.isRequired,
-    settings: PropTypes.object.isRequired,
-    canvas: PropTypes.object.isRequired,
+    // settings: PropTypes.object.isRequired,
+    // canvas: PropTypes.object.isRequired,
     onMouseEnter: PropTypes.func.isRequired,
     onMouseLeave: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired,
