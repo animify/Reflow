@@ -33,6 +33,7 @@ class Entity extends PureComponent {
         // const { canvas } = this.props;
         const { entity, onMouseEnter, onMouseLeave, onClick } = this.props;
         const style = {
+            opacity: entity.opacity,
             width: entity.size.h,
             height: entity.size.h,
         };
