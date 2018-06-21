@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Draggable from '../Draggable';
@@ -27,7 +27,7 @@ const handlers = {
     }
 };
 
-class Entity extends PureComponent {
+class Entity extends Component {
     shouldComponentUpdate(newProps) {
         return this.props.entity !== newProps.entity;
     }
@@ -56,6 +56,7 @@ class Entity extends PureComponent {
                     onMouseLeave={onMouseLeave}
                     onClick={onClick}
                     style={style}
+                    opacity={entity.opacity}
                 >
                     <EntityMapper entity={entity} />
                 </g>

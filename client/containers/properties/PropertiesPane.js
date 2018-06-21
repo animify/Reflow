@@ -9,20 +9,20 @@ const properties = {
     fillColor: {
         label: 'Fill',
         type: 'string',
-        valueMap: ['fillColor'],
-        valueLabelMap: ['Fill'],
+        valueMap: 'fillColor',
+        valueLabelMap: 'Fill',
     },
     opacity: {
         label: 'Opacity',
         type: 'number',
-        valueMap: ['opacity'],
-        valueLabelMap: ['Opacity'],
+        valueMap: 'opacity',
+        valueLabelMap: 'Opacity',
     },
     locked: {
         label: 'Locked',
         type: 'number',
-        valueMap: ['locked'],
-        valueLabelMap: ['Locked'],
+        valueMap: 'locked',
+        valueLabelMap: 'Locked',
     },
     position: {
         label: 'Position',
@@ -40,7 +40,7 @@ const properties = {
 const propertiesMap = Object.keys(properties);
 
 const mapStateToProps = state => ({
-    entities: Object.values(state.entities.present).filter(e => e.selected),
+    entities: Object.values(state.entities.present.list).filter(e => e.selected),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -50,19 +50,14 @@ const mapDispatchToProps = (dispatch) => ({
 class PropertiesPane extends PureComponent {
     onChange = (key, newValue) => {
         this.props.entities.forEach((entity) => {
-            console.log('entity', entity[key]);
-            console.log({
+            const newProp = {
                 [key]: {
                     ...entity[key],
                     ...newValue
                 }
-            })
-            this.props.propChange(`${entity.type}${entity.id}`, {
-                [key]: {
-                    ...entity[key],
-                    ...newValue
-                }
-            });
+            }
+            console.log('change', newProp);
+            this.props.propChange(`${entity.type}${entity.id}`, newProp);
         })
     }
 
@@ -72,7 +67,7 @@ class PropertiesPane extends PureComponent {
 
         different.forEach(p => {
             const newValue = properties[p].valueMap.length === 1 ? null : properties[p].valueMap.reduce((o, v) => {
-                o[v] = null;
+                o[v] = undefined;
                 return o;
             }, {})
             common[p] = newValue

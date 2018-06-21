@@ -7,25 +7,40 @@ const Property = ({ ownMap, prop, value, change }) => {
 
         switch (type) {
             case 'number':
-                inputValue = parseInt(inputValue, 10);
+                inputValue = parseFloat(inputValue);
                 break;
         }
 
         return inputValue;
     };
 
-    const handleNewValue = (e, val) => {
+    const handleNewValue = (e, val, nested) => {
         let input = e.target.value;
+        console.log(input);
         if (input === null) {
             input = 0;
         }
 
         const inputValue = parseValue(input, ownMap.type);
-        const newValue = {
+        console.log('inputValue', inputValue);
+        const newValue = nested ? {
             [val]: inputValue
-        };
+        } : inputValue;
         change(newValue);
     };
+
+    const PropInput = ({ label, val, nested }) => (
+        <div className="input">
+            <label>
+                <span>{label}</span>
+                <input
+                    type="text"
+                    value={val || 'Mixed'}
+                    onChange={e => handleNewValue(e, val, nested)}
+                />
+            </label>
+        </div>
+    );
 
     return (
         <Fragment>
@@ -33,18 +48,9 @@ const Property = ({ ownMap, prop, value, change }) => {
                 <label>
                     <h5>{ownMap.label}</h5>
                     <p>{JSON.stringify(value)}</p>
-                    {ownMap.valueMap && ownMap.valueMap.map((val, i) => (
-                        <div className="input" key={`${prop}-${val}`}>
-                            <label>
-                                <span>{ownMap.valueLabelMap[i]}</span>
-                                <input
-                                    type={ownMap.type}
-                                    value={value[val] || value}
-                                    onChange={e => handleNewValue(e, val)}
-                                />
-                            </label>
-                        </div>
-                    ))}
+                    {Array.isArray(ownMap.valueMap) ? ownMap.valueMap.map((val, i) => (
+                        <PropInput key={`${prop}-${val}`} label={ownMap.valueLabelMap[i]} val={value[val]} nested />
+                    )) : <PropInput label={ownMap.valueLabelMap} val={value.toString()} />}
                 </label>
             </div>
         </Fragment>
