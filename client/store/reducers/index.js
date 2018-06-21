@@ -9,7 +9,7 @@ import boards from './boards';
 export default combineReducers({
     router: routerReducer,
     canvas,
-    boards: undoable(boards),
     settings,
+    boards: undoable(boards),
     entities: undoable(entities, { filter: excludeAction(['ENTITY::MOUSEENTER', 'ENTITY::MOUSELEAVE', 'ENTITY::CLICK']) }),
 });

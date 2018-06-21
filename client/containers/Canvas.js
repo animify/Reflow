@@ -5,7 +5,7 @@ import { ActionCreators } from 'redux-undo';
 import PropTypes from 'prop-types';
 import produce from 'immer';
 import Entities from './Entities';
-import Frames from './Frames';
+import Frames from './frames/Frames';
 import { pan, zoom } from '../store/actions';
 import { scaleWheelDelta, clientPoint } from '../utils/helpers';
 
@@ -31,7 +31,7 @@ const keyHandlers = {
 const mapStateToProps = state => ({
     canvas: state.canvas,
     settings: state.settings,
-    boards: state.boards,
+    boards: state.boards.present,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -90,7 +90,7 @@ class Canvas extends PureComponent {
                 this.zoom(point, multiplier);
             }
         } else {
-            this.pan(e.deltaX * -1, e.deltaY * -1);
+            this.pan((e.deltaX * -1) / data.scale, (e.deltaY * -1) / data.scale);
         }
     }
 
@@ -114,7 +114,7 @@ class Canvas extends PureComponent {
     }
 
     render() {
-        const { onUndo, onRedo, canvas, settings, boards } = this.props;
+        const { onUndo, onRedo, settings, boards } = this.props;
         const { matrix, scale } = this.state;
         const handlers = {
             ...keyHandlers,

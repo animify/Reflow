@@ -4,22 +4,20 @@ import PropTypes from 'prop-types';
 import Entity from './entities/Entity';
 
 const mapStateToProps = state => ({
-    entities: state.entities.present,
+    entities: Object.values(state.entities.present).filter(en => en.type === 'screen' || en.type === 'link'),
 });
 
 const Entities = ({ entities, scale }) => (
     <Fragment>
-        {
-            Object.values(entities).filter(en => en.type === 'screen' || en.type === 'link').map(entity => (
-                <Entity key={entity.id} entity={entity} scale={scale} />
-            ))
-        }
-    </Fragment>
+        {entities.map(entity => (
+            <Entity key={entity.id} entity={entity} scale={scale} />
+        ))}
+    </Fragment >
 );
 
 Entities.propTypes = {
-    entities: PropTypes.object.isRequired,
     scale: PropTypes.number.isRequired,
+    entities: PropTypes.array.isRequired,
 };
 
 export default connect(
