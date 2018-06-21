@@ -1,6 +1,5 @@
 node_modules
 dist
-data
 test/bundle.js
 test/assets
 *.log
