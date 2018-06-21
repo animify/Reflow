@@ -7,15 +7,14 @@ import store from '../../store';
 import EntityMapper from './EntityMapper';
 // import { checkVisible } from '../../utils/helpers';
 
-const mapStateToProps = state => ({
-    settings: state.settings,
-    canvas: state.canvas,
+const mapStateToProps = (state, ownProps) => ({
+    entity: state.entities.present.list[ownProps.entityId]
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onMouseEnter: () => dispatch(mouseEnter(`${ownProps.entity.type}${ownProps.entity.id}`)),
-    onMouseLeave: () => dispatch(mouseLeave(`${ownProps.entity.type}${ownProps.entity.id}`)),
-    onClick: () => dispatch(mouseClick(`${ownProps.entity.type}${ownProps.entity.id}`)),
+    onMouseEnter: () => dispatch(mouseEnter(ownProps.entityId)),
+    onMouseLeave: () => dispatch(mouseLeave(ownProps.entityId)),
+    onClick: () => dispatch(mouseClick(ownProps.entityId)),
 });
 
 const handlers = {
@@ -23,16 +22,18 @@ const handlers = {
     },
     onDrag: () => {
     },
-    onStop: (entity, e, i) => {
-        console.log(e, i);
-        store.dispatch(updateEntity(`${entity.type}${entity.id}`, { position: { x: i.x, y: i.y } }));
+    onStop: (entityId, data) => {
+        store.dispatch(updateEntity(entityId, { position: { x: data.x, y: data.y } }));
     }
 };
 
 class Entity extends PureComponent {
+    shouldComponentUpdate(newProps) {
+        return this.props.entity !== newProps.entity;
+    }
+
     render() {
-        // const { canvas } = this.props;
-        const { entity, onMouseEnter, onMouseLeave, onClick, scale } = this.props;
+        const { entity, entityId, onMouseEnter, onMouseLeave, onClick } = this.props;
         const style = {
             opacity: entity.opacity,
             width: entity.size.h,
@@ -44,10 +45,10 @@ class Entity extends PureComponent {
                 grid={null}
                 disabled={entity.locked}
                 position={entity.position}
-                onStart={(e, i) => handlers.onStart(entity, e, i)}
-                onDrag={(e, i) => handlers.onDrag(entity, e, i)}
-                onStop={(e, i) => handlers.onStop(entity, e, i)}
-                scale={scale}
+                onStart={(e, i) => handlers.onStart(entityId, e, i)}
+                onDrag={(e, i) => handlers.onDrag(entityId, e, i)}
+                onStop={(e, data) => handlers.onStop(entityId, data)}
+                scale={1}
             >
                 <g
                     key={entity.id}
@@ -56,7 +57,6 @@ class Entity extends PureComponent {
                     onClick={onClick}
                     style={style}
                 >
-                    <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
                     <EntityMapper entity={entity} />
                 </g>
             </Draggable>
@@ -65,10 +65,8 @@ class Entity extends PureComponent {
 }
 
 Entity.propTypes = {
+    entityId: PropTypes.string.isRequired,
     entity: PropTypes.object.isRequired,
-    scale: PropTypes.number.isRequired,
-    // settings: PropTypes.object.isRequired,
-    // canvas: PropTypes.object.isRequired,
     onMouseEnter: PropTypes.func.isRequired,
     onMouseLeave: PropTypes.func.isRequired,
     onClick: PropTypes.func.isRequired,

@@ -50,13 +50,6 @@ class Canvas extends PureComponent {
         this.zoom = this.zoom.bind(this);
     }
 
-    componentWillMount() {
-        this.setState({
-            matrix: document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGMatrix(),
-            scale: 1
-        });
-    }
-
     componentDidMount() {
         this.svgRenderer.addEventListener('wheel', this.onWheel, { passive: true });
     }
@@ -66,8 +59,8 @@ class Canvas extends PureComponent {
     }
 
     onWheel(e) {
-        const data = this.state;
-        // const data = this.props.canvas;
+        // const data = this.state;
+        const data = this.props.canvas;
 
         if (isCmdDown) {
             const wD = e.wheelDelta;
@@ -95,27 +88,27 @@ class Canvas extends PureComponent {
     }
 
     pan(x, y) {
-        this.setState(produce((draft) => {
-            draft.matrix = draft.matrix.translate(x, y);
-        }));
+        // this.setState(produce((draft) => {
+        //     draft.matrix = draft.matrix.translate(x, y);
+        // }));
 
-        // const newMatrix = this.props.canvas.matrix.translate(x, y);
-        // this.props.pan(newMatrix);
+        const newMatrix = this.props.canvas.matrix.translate(x, y);
+        this.props.pan(newMatrix);
     }
 
     zoom(point, multiplier) {
-        this.setState(produce((draft) => {
-            draft.matrix = draft.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
-            draft.scale *= multiplier;
-        }));
+        // this.setState(produce((draft) => {
+        //     draft.matrix = draft.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
+        //     draft.scale *= multiplier;
+        // }));
 
-        // const newMatrix = this.props.canvas.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
-        // this.props.zoom(newMatrix, this.props.canvas.scale * multiplier);
+        const newMatrix = this.props.canvas.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
+        this.props.zoom(newMatrix, this.props.canvas.scale * multiplier);
     }
 
     render() {
-        const { onUndo, onRedo, settings, boards } = this.props;
-        const { matrix, scale } = this.state;
+        const { onUndo, onRedo, settings, boards, canvas } = this.props;
+        const matrix = canvas.matrix;
         const handlers = {
             ...keyHandlers,
             undo: onUndo,
@@ -126,12 +119,12 @@ class Canvas extends PureComponent {
             <HotKeys className="renderer" keyMap={keyMap} handlers={handlers} focused>
                 <div className="stats">
                     <p><strong>Board:</strong> {boards.currentPage}</p>
-                    <p><strong>Scale:</strong> {scale}</p>
+                    <p><strong>Scale:</strong> {canvas.scale}</p>
                     <p><strong>Grid:</strong> {settings.grid == null ? 'N/A' : settings.grid.enabled}</p>
                 </div>
                 <svg id="renderer" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink" ref={(ref) => { this.svgRenderer = ref; }}>
                     <g transform={`matrix(${matrix.a} ${matrix.b} ${matrix.c} ${matrix.d} ${matrix.e} ${matrix.f})`}>
-                        <Entities scale={scale} />
+                        <Entities />
                     </g>
                 </svg>
                 <svg id="renderer-overlay" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink">

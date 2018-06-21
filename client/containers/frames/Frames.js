@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Frame from './Frame';
 
 const mapStateToProps = state => ({
-    framableEntities: Object.values(state.entities.present).filter(en => en.selected || en.hovering),
+    framableEntities: Object.values(state.entities.present.list).filter(en => en.selected || en.hovering),
 });
 
 const Frames = ({ framableEntities }) => (

@@ -78,7 +78,7 @@ class PropertiesPane extends PureComponent {
             common[p] = newValue
         });
         const commonProps = Object.entries(common);
-        console.log(common, different);
+        // console.log(common, different);
 
         return (
             <Fragment>

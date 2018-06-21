@@ -21,9 +21,13 @@ const entityMap = {
 export default class EntityMapper extends PureComponent {
     render() {
         const { entity } = this.props;
-        const EntityType = entityMap[entity.type].component;
+        if (entityMap[entity.type]) {
+            const EntityType = entityMap[entity.type].component;
 
-        return <EntityType entity={entity} />;
+            return <EntityType entity={entity} />;
+        }
+
+        return null;
     }
 }
 
