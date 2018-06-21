@@ -15,12 +15,15 @@ const Property = ({ ownMap, prop, value, change }) => {
     };
 
     const handleNewValue = (e, val) => {
-        const inputValue = parseValue(e.target.value, ownMap.type);
+        let input = e.target.value;
+        if (input === null) {
+            input = 0;
+        }
+
+        const inputValue = parseValue(input, ownMap.type);
         const newValue = {
-            ...value,
             [val]: inputValue
         };
-
         change(newValue);
     };
 
@@ -37,7 +40,6 @@ const Property = ({ ownMap, prop, value, change }) => {
                                 <input
                                     type={ownMap.type}
                                     value={value[val] || value}
-                                    step="0.1"
                                     onChange={e => handleNewValue(e, val)}
                                 />
                             </label>

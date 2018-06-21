@@ -50,9 +50,18 @@ const mapDispatchToProps = (dispatch) => ({
 class PropertiesPane extends PureComponent {
     onChange = (key, newValue) => {
         this.props.entities.forEach((entity) => {
+            console.log('entity', entity[key]);
+            console.log({
+                [key]: {
+                    ...entity[key],
+                    ...newValue
+                }
+            })
             this.props.propChange(`${entity.type}${entity.id}`, {
-                ...entity[key],
-                [key]: newValue
+                [key]: {
+                    ...entity[key],
+                    ...newValue
+                }
             });
         })
     }
@@ -63,7 +72,7 @@ class PropertiesPane extends PureComponent {
 
         different.forEach(p => {
             const newValue = properties[p].valueMap.length === 1 ? null : properties[p].valueMap.reduce((o, v) => {
-                o[v] = 0
+                o[v] = null;
                 return o;
             }, {})
             common[p] = newValue
