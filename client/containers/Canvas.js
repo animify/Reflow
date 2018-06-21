@@ -90,7 +90,7 @@ class Canvas extends PureComponent {
                 this.zoom(point, multiplier);
             }
         } else {
-            this.pan(e.deltaX * -1, e.deltaY * -1);
+            this.pan((e.deltaX * -1) / data.scale, (e.deltaY * -1) / data.scale);
         }
     }
 
