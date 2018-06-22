@@ -9,30 +9,32 @@ const properties = {
     fillColor: {
         label: 'Fill',
         type: 'string',
-        valueMap: ['fillColor'],
-        valueLabelMap: ['Fill'],
+        valueMap: 'fillColor',
+        valueLabelMap: 'Fill',
     },
     opacity: {
         label: 'Opacity',
         type: 'number',
-        valueMap: ['opacity'],
-        valueLabelMap: ['Opacity'],
+        valueMap: 'opacity',
+        valueLabelMap: 'Opacity',
     },
     locked: {
         label: 'Locked',
         type: 'number',
-        valueMap: ['locked'],
-        valueLabelMap: ['Locked'],
+        valueMap: 'locked',
+        valueLabelMap: 'Locked',
     },
     position: {
         label: 'Position',
         type: 'number',
+        nested: true,
         valueMap: ['x', 'y'],
         valueLabelMap: ['X', 'Y'],
     },
     size: {
         label: 'Size',
         type: 'number',
+        nested: true,
         valueMap: ['w', 'h'],
         valueLabelMap: ['Width', 'Height'],
     },
@@ -48,21 +50,18 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class PropertiesPane extends PureComponent {
-    onChange = (key, newValue) => {
+    onChange = (key, newValue, nested) => {
         this.props.entities.forEach((entity) => {
-            console.log('entity', entity[key]);
-            console.log({
+            const val = nested ? {
                 [key]: {
                     ...entity[key],
                     ...newValue
                 }
-            })
-            this.props.propChange(`${entity.type}${entity.id}`, {
-                [key]: {
-                    ...entity[key],
-                    ...newValue
+            } : {
+                    [key]: newValue
                 }
-            });
+
+            this.props.propChange(`${entity.type}${entity.id}`, val);
         })
     }
 
@@ -84,7 +83,7 @@ class PropertiesPane extends PureComponent {
             <Fragment>
                 {commonProps.length > 0 && (<div id="properties">
                     {commonProps.map(([key, value]) => (
-                        <Property key={key} ownMap={properties[key]} prop={key} value={value} change={(newValue) => this.onChange(key, newValue)} />
+                        <Property key={key} ownMap={properties[key]} prop={key} value={value} commitChange={(newValue, nested) => this.onChange(key, newValue, nested)} />
                     ))}
                 </div>)}
             </Fragment>
