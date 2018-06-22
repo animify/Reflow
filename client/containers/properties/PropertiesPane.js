@@ -40,7 +40,7 @@ const properties = {
 const propertiesMap = Object.keys(properties);
 
 const mapStateToProps = state => ({
-    entities: Object.values(state.entities.present).filter(e => e.selected),
+    entities: Object.values(state.doc.present.entities).filter(e => e.selected),
 });
 
 const mapDispatchToProps = (dispatch) => ({

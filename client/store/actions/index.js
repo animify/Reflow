@@ -1,3 +1,3 @@
 export * from './canvas';
-export * from './entities';
+export * from './doc';
 export * from './boards';

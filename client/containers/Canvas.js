@@ -1,9 +1,8 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { HotKeys } from 'react-hotkeys';
 import { ActionCreators } from 'redux-undo';
 import PropTypes from 'prop-types';
-import produce from 'immer';
 import Entities from './Entities';
 import Frames from './frames/Frames';
 import { pan, zoom } from '../store/actions';
@@ -30,8 +29,6 @@ const keyHandlers = {
 
 const mapStateToProps = state => ({
     canvas: state.canvas,
-    settings: state.settings,
-    boards: state.boards.present,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -41,7 +38,7 @@ const mapDispatchToProps = dispatch => ({
     zoom: (matrix, multiplier) => dispatch(zoom(matrix, multiplier)),
 });
 
-class Canvas extends PureComponent {
+class Canvas extends Component {
     constructor(props) {
         super(props);
         // this.svgRenderer = React.createRef();
@@ -52,6 +49,10 @@ class Canvas extends PureComponent {
 
     componentDidMount() {
         this.svgRenderer.addEventListener('wheel', this.onWheel, { passive: true });
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return nextProps.canvas.matrix !== this.props.canvas.matrix;
     }
 
     componentWillUnmount() {
@@ -107,7 +108,7 @@ class Canvas extends PureComponent {
     }
 
     render() {
-        const { onUndo, onRedo, settings, boards, canvas } = this.props;
+        const { onUndo, onRedo, canvas } = this.props;
         const matrix = canvas.matrix;
         const handlers = {
             ...keyHandlers,
@@ -117,11 +118,6 @@ class Canvas extends PureComponent {
 
         return (
             <HotKeys className="renderer" keyMap={keyMap} handlers={handlers} focused>
-                <div className="stats">
-                    <p><strong>Board:</strong> {boards.currentPage}</p>
-                    <p><strong>Scale:</strong> {canvas.scale}</p>
-                    <p><strong>Grid:</strong> {settings.grid == null ? 'N/A' : settings.grid.enabled}</p>
-                </div>
                 <svg id="renderer" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink" ref={(ref) => { this.svgRenderer = ref; }}>
                     <g transform={`matrix(${matrix.a} ${matrix.b} ${matrix.c} ${matrix.d} ${matrix.e} ${matrix.f})`}>
                         <Entities />
@@ -138,8 +134,6 @@ class Canvas extends PureComponent {
 }
 
 Canvas.propTypes = {
-    settings: PropTypes.object.isRequired,
-    boards: PropTypes.object.isRequired,
     canvas: PropTypes.object.isRequired,
     onUndo: PropTypes.func.isRequired,
     onRedo: PropTypes.func.isRequired,
