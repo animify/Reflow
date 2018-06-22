@@ -1,66 +1,113 @@
-import React, { Fragment } from 'react';
+import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
-const Property = ({ ownMap, prop, value, change }) => {
-    const parseValue = (unparsedValue, type) => {
-        let inputValue = unparsedValue;
+const parseValue = (unparsedValue, type) => {
+    let inputValue = unparsedValue;
 
-        switch (type) {
-            case 'number':
-                inputValue = parseFloat(inputValue);
-                break;
+    switch (type) {
+        case 'number':
+            inputValue = parseFloat(inputValue);
+            break;
+    }
+
+    return inputValue;
+};
+
+export default class Property extends Component {
+    componentWillMount() {
+        this.resetPropsState(this.props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.resetPropsState(nextProps);
+    }
+
+    resetPropsState = (props) => {
+        const state = props.ownMap.nested ? props.ownMap.valueMap.reduce((o, v) => (o[v] = props.value[v] || 'Mixed', o), {}) : {
+            [props.ownMap.valueMap]: props.value || 'Mixed'
+        };
+        this.setState(state)
+    }
+
+    handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            e.target.blur();
         }
+    }
 
-        return inputValue;
-    };
+    handleInputChange = (event) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
 
-    const handleNewValue = (e, val, nested) => {
-        let input = e.target.value;
-        console.log(input);
-        if (input === null) {
-            input = 0;
-        }
+        this.setState({
+            [name]: value
+        });
+    }
 
+    commitValue = (val) => {
+        const { ownMap, commitChange } = this.props;
+        let input = this.state[val];
         const inputValue = parseValue(input, ownMap.type);
-        console.log('inputValue', inputValue);
-        const newValue = nested ? {
+
+        if (ownMap.type === 'number' && (isNaN(inputValue) || !isFinite(inputValue))) {
+            return this.resetPropsState(this.props);
+        }
+
+        const newValue = ownMap.nested ? {
             [val]: inputValue
         } : inputValue;
-        change(newValue);
+
+        commitChange(newValue, ownMap.nested);
     };
 
-    const PropInput = ({ label, val, nested }) => (
-        <div className="input">
-            <label>
-                <span>{label}</span>
-                <input
-                    type="text"
-                    value={val || 'Mixed'}
-                    onChange={e => handleNewValue(e, val, nested)}
-                />
-            </label>
-        </div>
-    );
+    render() {
+        const { ownMap, prop, value } = this.props;
 
-    return (
-        <Fragment>
-            <div className="property">
-                <label>
-                    <h5>{ownMap.label}</h5>
-                    <p>{JSON.stringify(value)}</p>
-                    {Array.isArray(ownMap.valueMap) ? ownMap.valueMap.map((val, i) => (
-                        <PropInput key={`${prop}-${val}`} label={ownMap.valueLabelMap[i]} val={value[val]} nested />
-                    )) : <PropInput label={ownMap.valueLabelMap} val={value.toString()} />}
-                </label>
-            </div>
-        </Fragment>
-    );
-};
+        return (
+            <Fragment>
+                <div className="property">
+                    <label>
+                        <h5>{ownMap.label}</h5>
+                        <p>{JSON.stringify(value)}</p>
+                        {ownMap.nested ? ownMap.valueMap.map((val, i) => (
+                            <div className="input" key={`${prop}-${val}`}>
+                                <label>
+                                    <span>{ownMap.valueLabelMap[i]}</span>
+                                    <input
+                                        type="text"
+                                        name={val}
+                                        value={this.state[val]}
+                                        onKeyPress={this.handleKeyPress}
+                                        onChange={this.handleInputChange}
+                                        onBlur={() => this.commitValue(val)}
+                                    />
+                                </label>
+                            </div>
+                        )) : <div className="input" key={`${prop}-${ownMap.valueMap}`}>
+                                <label>
+                                    <span>{ownMap.valueMap}</span>
+                                    <input
+                                        type="text"
+                                        name={ownMap.valueMap}
+                                        value={this.state[ownMap.valueMap]}
+                                        onKeyPress={this.handleKeyPress}
+                                        onChange={this.handleInputChange}
+                                        onBlur={() => this.commitValue(ownMap.valueMap)}
+                                    />
+                                </label>
+                            </div>}
+                    </label>
+                </div>
+            </Fragment>
+        );
+    }
+}
 
 Property.propTypes = {
     ownMap: PropTypes.object.isRequired,
     prop: PropTypes.string.isRequired,
-    change: PropTypes.func.isRequired,
+    commitChange: PropTypes.func.isRequired,
     value: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
@@ -68,5 +115,3 @@ Property.propTypes = {
         PropTypes.bool,
     ]).isRequired,
 };
-
-export default Property;

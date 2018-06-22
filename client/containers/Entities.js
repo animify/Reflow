@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Entity from './entities/Entity';
 
 const mapStateToProps = state => ({
-    entitiesOrder: state.entities.present.order,
+    entitiesOrder: state.doc.present.entitiesOrder,
 });
 
 const Entities = ({ entitiesOrder }) => (

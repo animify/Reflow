@@ -27,12 +27,14 @@ const properties = {
     position: {
         label: 'Position',
         type: 'number',
+        nested: true,
         valueMap: ['x', 'y'],
         valueLabelMap: ['X', 'Y'],
     },
     size: {
         label: 'Size',
         type: 'number',
+        nested: true,
         valueMap: ['w', 'h'],
         valueLabelMap: ['Width', 'Height'],
     },
@@ -40,7 +42,7 @@ const properties = {
 const propertiesMap = Object.keys(properties);
 
 const mapStateToProps = state => ({
-    entities: Object.values(state.entities.present.list).filter(e => e.selected),
+    entities: Object.values(state.doc.present.entities).filter(e => e.selected),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -48,16 +50,18 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class PropertiesPane extends PureComponent {
-    onChange = (key, newValue) => {
+    onChange = (key, newValue, nested) => {
         this.props.entities.forEach((entity) => {
-            const newProp = {
+            const val = nested ? {
                 [key]: {
                     ...entity[key],
                     ...newValue
                 }
-            }
-            console.log('change', newProp);
-            this.props.propChange(`${entity.type}${entity.id}`, newProp);
+            } : {
+                    [key]: newValue
+                }
+
+            this.props.propChange(`${entity.type}${entity.id}`, val);
         })
     }
 
@@ -79,7 +83,7 @@ class PropertiesPane extends PureComponent {
             <Fragment>
                 {commonProps.length > 0 && (<div id="properties">
                     {commonProps.map(([key, value]) => (
-                        <Property key={key} ownMap={properties[key]} prop={key} value={value} change={(newValue) => this.onChange(key, newValue)} />
+                        <Property key={key} ownMap={properties[key]} prop={key} value={value} commitChange={(newValue, nested) => this.onChange(key, newValue, nested)} />
                     ))}
                 </div>)}
             </Fragment>
