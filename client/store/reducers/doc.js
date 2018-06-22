@@ -11,14 +11,10 @@ const doc = produce((draft, action) => {
             break;
 
         case 'ENTITY::MOUSEDOWN':
-            console.log('down');
-            draft.entities[action.id].hovering = false;
             draft.entities[action.id].selected = true;
             break;
 
         case 'ENTITY::SET':
-            console.log('setting');
-
             draft.currentPage = action.payload.currentPage;
             draft.entitiesOrder = action.payload.entitiesOrder;
             draft.entities = action.payload.entities;

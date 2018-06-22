@@ -1,16 +1,24 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Draggable from '../Draggable';
 import { mouseEnter, mouseLeave, mouseDown, updateEntity } from '../../store/actions';
 import store from '../../store';
-import Link from './Link';
 import Screen from './Screen';
+import Image from './Image';
+import Link from './Link';
 // import { checkVisible } from '../../utils/helpers';
 
 const entityMap = {
     screen: {
         component: Screen,
+        options: {
+            resizable: false,
+            draggable: true
+        }
+    },
+    image: {
+        component: Image,
         options: {
             resizable: false,
             draggable: true
@@ -53,7 +61,11 @@ const getEntityComponent = (type) => {
     return null;
 };
 
-class Entity extends PureComponent {
+class Entity extends Component {
+    shouldComponentUpdate(nextProps) {
+        return nextProps.entity !== this.props.entity;
+    }
+
     render() {
         const { entity, entityId, onMouseEnter, onMouseLeave, onMouseDown } = this.props;
         const entityOptions = getEntityComponent(entity.type);
@@ -86,26 +98,39 @@ class Entity extends PureComponent {
 
         // const ConditionalWrap = ({ children }) => (entityOptions.options.draggable ? dragWrap(children) : children);
 
-        return (
-            <Draggable
-                grid={null}
-                disabled={entity.locked}
-                position={entity.position}
-                onMouseDown={onMouseDown}
-                onStart={(e, i) => handlers.onStart(entityId, e, i)}
-                onDrag={(e, i) => handlers.onDrag(entityId, e, i)}
-                onStop={(e, data) => handlers.onStop(entityId, data)}
-                scale={1}
-            >
-                <g
-                    onMouseEnter={onMouseEnter}
-                    onMouseLeave={onMouseLeave}
-                    style={style}
+        if (entityOptions.options.draggable) {
+            return (
+                <Draggable
+                    grid={null}
+                    disabled={entity.locked}
+                    position={entity.position}
+                    onMouseDown={onMouseDown}
+                    onStart={(e, i) => handlers.onStart(entityId, e, i)}
+                    onDrag={(e, i) => handlers.onDrag(entityId, e, i)}
+                    onStop={(e, data) => handlers.onStop(entityId, data)}
+                    scale={1}
                 >
-                    <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
-                    <EntityComponent entity={entity} />
-                </g>
-            </Draggable>
+                    <g
+                        onMouseEnter={onMouseEnter}
+                        onMouseLeave={onMouseLeave}
+                        style={style}
+                    >
+                        <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
+                        <EntityComponent entity={entity} />
+                    </g>
+                </Draggable>
+            );
+        }
+
+        return (
+            <g
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+                style={style}
+            >
+                <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
+                <EntityComponent entity={entity} />
+            </g>
         );
     }
 }

@@ -28,7 +28,7 @@ export default class Screen extends PureComponent {
         return (
             <Fragment>
                 <image width={entity.size.w} height={entity.size.h} xlinkHref={entity.source.id} />
-                {entity.hovering && innerElements.map(ie => (
+                {(entity.hovering || entity.selected) && innerElements.map(ie => (
                     <rect
                         key={ie.id}
                         x={ie.x}

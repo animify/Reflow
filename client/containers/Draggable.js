@@ -74,6 +74,7 @@ export default class Draggable extends PureComponent {
     render() {
         const { x, y } = this.state;
         const transform = `translate(${x}, ${y})`;
+
         return (
             <DraggableCore {...this.props} onStart={this.onDragStart} onDrag={this.onDrag} onStop={this.onDragStop}>
                 {React.cloneElement(this.props.children, {
