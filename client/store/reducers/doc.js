@@ -20,6 +20,10 @@ const doc = produce((draft, action) => {
             draft.entities = action.payload.entities;
             break;
 
+        case 'DOCUMENT::DESELECT_ALL':
+            draft.entitiesOrder.forEach(id => (draft.entities[id].selected = false));
+            break;
+
         case 'ENTITY::UPDATE':
             console.log('Updating with payload:', action.payload);
 

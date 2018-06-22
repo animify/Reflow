@@ -44,6 +44,10 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 const handlers = {
+    onMouseDown: (e, followEvent) => {
+        e.stopPropagation();
+        followEvent();
+    },
     onStart: () => {
     },
     onDrag: () => {
@@ -102,9 +106,9 @@ class Entity extends Component {
             return (
                 <Draggable
                     grid={null}
-                    disabled={entity.locked}
+                    disabled={Boolean(entity.locked)}
                     position={entity.position}
-                    onMouseDown={onMouseDown}
+                    onMouseDown={e => handlers.onMouseDown(e, onMouseDown)}
                     onStart={(e, i) => handlers.onStart(entityId, e, i)}
                     onDrag={(e, i) => handlers.onDrag(entityId, e, i)}
                     onStop={(e, data) => handlers.onStop(entityId, data)}

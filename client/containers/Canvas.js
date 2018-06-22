@@ -5,7 +5,7 @@ import { ActionCreators } from 'redux-undo';
 import PropTypes from 'prop-types';
 import Entities from './Entities';
 import Frames from './frames/Frames';
-import { pan, zoom } from '../store/actions';
+import { pan, zoom, deselectAllEntities } from '../store/actions';
 import { scaleWheelDelta, clientPoint } from '../utils/helpers';
 
 let isCmdDown = false;
@@ -35,13 +35,14 @@ const mapDispatchToProps = dispatch => ({
     onUndo: () => dispatch(ActionCreators.undo()),
     onRedo: () => dispatch(ActionCreators.redo()),
     pan: (x, y) => dispatch(pan(x, y)),
+    deselectAll: () => dispatch(deselectAllEntities()),
     zoom: (matrix, multiplier) => dispatch(zoom(matrix, multiplier)),
 });
 
 class Canvas extends Component {
     constructor(props) {
         super(props);
-        // this.svgRenderer = React.createRef();
+
         this.onWheel = this.onWheel.bind(this);
         this.pan = this.pan.bind(this);
         this.zoom = this.zoom.bind(this);
@@ -60,7 +61,6 @@ class Canvas extends Component {
     }
 
     onWheel(e) {
-        // const data = this.state;
         const data = this.props.canvas;
 
         if (isCmdDown) {
@@ -89,26 +89,17 @@ class Canvas extends Component {
     }
 
     pan(x, y) {
-        // this.setState(produce((draft) => {
-        //     draft.matrix = draft.matrix.translate(x, y);
-        // }));
-
         const newMatrix = this.props.canvas.matrix.translate(x, y);
         this.props.pan(newMatrix);
     }
 
     zoom(point, multiplier) {
-        // this.setState(produce((draft) => {
-        //     draft.matrix = draft.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
-        //     draft.scale *= multiplier;
-        // }));
-
         const newMatrix = this.props.canvas.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
         this.props.zoom(newMatrix, this.props.canvas.scale * multiplier);
     }
 
     render() {
-        const { onUndo, onRedo, canvas } = this.props;
+        const { onUndo, onRedo, canvas, deselectAll } = this.props;
         const matrix = canvas.matrix;
         const handlers = {
             ...keyHandlers,
@@ -118,7 +109,7 @@ class Canvas extends Component {
 
         return (
             <HotKeys className="renderer" keyMap={keyMap} handlers={handlers} focused>
-                <svg id="renderer" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink" ref={(ref) => { this.svgRenderer = ref; }}>
+                <svg id="renderer" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink" ref={(ref) => { this.svgRenderer = ref; }} onMouseDown={deselectAll}>
                     <g transform={`matrix(${matrix.a} ${matrix.b} ${matrix.c} ${matrix.d} ${matrix.e} ${matrix.f})`}>
                         <Entities />
                     </g>
@@ -139,6 +130,7 @@ Canvas.propTypes = {
     onRedo: PropTypes.func.isRequired,
     pan: PropTypes.func.isRequired,
     zoom: PropTypes.func.isRequired,
+    deselectAll: PropTypes.func.isRequired,
 };
 
 export default connect(

@@ -24,6 +24,10 @@ export const switchBoard = payload => ({
     payload
 });
 
+export const deselectAllEntities = () => ({
+    type: 'DOCUMENT::DESELECT_ALL'
+});
+
 export const setEntities = (currentPage, entities) => ({
     type: 'ENTITY::SET',
     payload: {
