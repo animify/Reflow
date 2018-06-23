@@ -39,7 +39,7 @@ const doc = produce((draft, action) => {
             break;
 
         case 'ENTITY::UPDATE':
-            console.log('Updating with payload:', action.payload);
+            // console.log('Updating with payload:', action.payload);
 
             draft.entities[action.id] = {
                 ...draft.entities[action.id],

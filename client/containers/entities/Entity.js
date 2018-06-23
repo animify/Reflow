@@ -35,7 +35,6 @@ const entityMap = {
 
 const mapStateToProps = (state, ownProps) => ({
     entity: state.doc.present.entities[ownProps.entityId],
-    selected: state.doc.present.selected.some(e => e === ownProps.entityId),
     hovering: state.doc.present.hovering === ownProps.entityId
 });
 
@@ -46,16 +45,19 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 });
 
 const handlers = {
+    isDragging: false,
     onMouseDown: (e, followEvent) => {
         e.stopPropagation();
         followEvent();
     },
     onStart: () => {
+        handlers.isDragging = true;
     },
     onDrag: () => {
     },
     onStop: (entityId, data) => {
         store.dispatch(updateEntity(entityId, { position: { x: data.x, y: data.y } }));
+        handlers.isDragging = false;
     }
 };
 
@@ -98,12 +100,12 @@ class Entity extends PureComponent {
                     scale={1}
                 >
                     <g
-                        onMouseEnter={onMouseEnter}
-                        onMouseLeave={onMouseLeave}
+                        onMouseEnter={!handlers.isDragging ? onMouseEnter : undefined}
+                        onMouseLeave={!handlers.isDragging ? onMouseLeave : undefined}
                         style={style}
                     >
                         <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
-                        <EntityComponent entity={entity} selected={selected} hovering={hovering} />
+                        <EntityComponent entity={entity} hovering={hovering} />
                     </g>
                 </Draggable>
             );
@@ -125,7 +127,6 @@ class Entity extends PureComponent {
 Entity.propTypes = {
     entityId: PropTypes.string.isRequired,
     entity: PropTypes.object.isRequired,
-    selected: PropTypes.bool.isRequired,
     hovering: PropTypes.bool.isRequired,
     onMouseEnter: PropTypes.func.isRequired,
     onMouseLeave: PropTypes.func.isRequired,
