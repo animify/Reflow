@@ -108,7 +108,7 @@ class Canvas extends Component {
         };
 
         return (
-            <HotKeys className="renderer" keyMap={keyMap} handlers={handlers} focused>
+            <HotKeys className="renderer" keyMap={keyMap} handlers={handlers} style={{ backgroundColor: '#020202' }} focused>
                 <svg id="renderer" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink" ref={(ref) => { this.svgRenderer = ref; }} onMouseDown={deselectAll}>
                     <g transform={`matrix(${matrix.a} ${matrix.b} ${matrix.c} ${matrix.d} ${matrix.e} ${matrix.f})`}>
                         <Entities />

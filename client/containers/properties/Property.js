@@ -67,37 +67,31 @@ export default class Property extends Component {
         return (
             <Fragment>
                 <div className="property">
-                    <label>
-                        <h5>{ownMap.label}</h5>
-                        <p>{JSON.stringify(value)}</p>
-                        {ownMap.nested ? ownMap.valueMap.map((val, i) => (
-                            <div className="input" key={`${prop}-${val}`}>
-                                <label>
-                                    <span>{ownMap.valueLabelMap[i]}</span>
-                                    <input
-                                        type="text"
-                                        name={val}
-                                        value={this.state[val]}
-                                        onKeyPress={this.handleKeyPress}
-                                        onChange={this.handleInputChange}
-                                        onBlur={() => this.commitValue(val)}
-                                    />
-                                </label>
-                            </div>
-                        )) : <div className="input" key={`${prop}-${ownMap.valueMap}`}>
-                                <label>
-                                    <span>{ownMap.valueMap}</span>
-                                    <input
-                                        type="text"
-                                        name={ownMap.valueMap}
-                                        value={this.state[ownMap.valueMap]}
-                                        onKeyPress={this.handleKeyPress}
-                                        onChange={this.handleInputChange}
-                                        onBlur={() => this.commitValue(ownMap.valueMap)}
-                                    />
-                                </label>
-                            </div>}
-                    </label>
+                    <h5>{ownMap.label}</h5>
+                    {/* <p>{JSON.stringify(value)}</p> */}
+                    {ownMap.nested ? ownMap.valueMap.map((val, i) => (
+                        <label className="input" key={`${prop}-${val}`}>
+                            <span>{ownMap.valueLabelMap[i]}</span>
+                            <input
+                                type="text"
+                                name={val}
+                                value={this.state[val]}
+                                onKeyPress={this.handleKeyPress}
+                                onChange={this.handleInputChange}
+                                onBlur={() => this.commitValue(val)}
+                            />
+                        </label>
+                    )) : <label className="input" key={`${prop}-${ownMap.valueMap}`}>
+                            <span>{ownMap.valueMap}</span>
+                            <input
+                                type="text"
+                                name={ownMap.valueMap}
+                                value={this.state[ownMap.valueMap]}
+                                onKeyPress={this.handleKeyPress}
+                                onChange={this.handleInputChange}
+                                onBlur={() => this.commitValue(ownMap.valueMap)}
+                            />
+                        </label>}
                 </div>
             </Fragment>
         );

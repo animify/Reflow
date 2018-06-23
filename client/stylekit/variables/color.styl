@@ -1,0 +1,41 @@
+$color = {
+    base: #16abee,
+    red: #f34363,
+    orange: #ff8842,
+    yellow: #ffbe2b,
+    green: #14d461,
+    blue: #35b9f9,
+    purple: #8d62ec,
+    pink: #ff4ccd,
+    black: #000000,
+    gunmetal: #7a7a7a,
+    slate: #d0d0d0,
+    silver: #767c7f,
+    smoke: #929a9c,
+    dim: #E9EDF0,
+    snow: #f4f6f7,
+    white: #ffffff
+};
+$textColor = {
+    heading: $color.gunmetal,
+    body: $color.slate,
+    light: $color.silver,
+    white: $color.white,
+    disabled: $color.smoke
+};
+$uiColor = {
+    dark-100: #1f1f1f,
+    dark-90: #2b2d2e,
+    dark-80: #37393b,
+    dark-60: #434547,
+    positive: $color.green,
+    negative: $color.red,
+    info: $color.blue,
+    warning: $color.yellow
+};
+$borderColor = {
+    info: lighten($color.blue, 10%),
+    warning: lighten($color.yellow, 10%),
+    important: lighten($color.red, 10%),
+    success: lighten($color.green, 10%)
+};

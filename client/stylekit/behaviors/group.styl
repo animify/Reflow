@@ -1,0 +1,40 @@
+.group
+    font-size: 0;
+
+    .button
+        margin: 0 !important;
+        border-radius: 0;
+
+        &.selected
+            background-color: $color.dim;
+            border: @background-color;
+            color: $color.heading;
+            user-select: none;
+            pointer-events: none;
+
+        &.outlined
+            & + .outlined
+                margin-left: -1px !important;
+
+        &:first-of-type
+            border-radius: $borderRadius.base 0 0 (((((((((((((((($borderRadius.base))))))))))))))));
+
+        &:last-of-type
+            border-radius: 0 $borderRadius.base $borderRadius.base 0;
+
+    &.vertical
+        .button
+            margin: 0 !important;
+            border-radius: 0;
+            display: block;
+            width: 100%;
+
+            &.outlined
+                & + .outlined
+                    margin-left: -1px !important;
+
+            &:first-of-type
+                border-radius: $borderRadius.base $borderRadius.base 0 0;
+
+            &:last-of-type
+                border-radius: 0 0 $borderRadius.base ((((((((((($borderRadius.base)))))))))));

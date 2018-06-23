@@ -36,7 +36,7 @@ const properties = {
         type: 'number',
         nested: true,
         valueMap: ['w', 'h'],
-        valueLabelMap: ['Width', 'Height'],
+        valueLabelMap: ['W', 'H'],
     },
 };
 const propertiesMap = Object.keys(properties);
