@@ -8,6 +8,8 @@ const doc = produce((draft, action) => {
             draft.currentPage = action.payload.currentPage;
             draft.entitiesOrder = action.payload.entitiesOrder;
             draft.entities = action.payload.entities;
+            draft.selected = [];
+            draft.hovering = null;
             break;
 
         case 'ENTITY::TOGGLE_SELECT':
