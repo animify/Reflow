@@ -14,7 +14,8 @@ const canvas = produce((draft, action) => {
         matrix: document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGMatrix(),
         innerHeight: window.innerHeight,
         innerWidth: window.innerWidth,
-        scale: 1
+        scale: 1,
+        presenting: false
     });
 
 export default canvas;

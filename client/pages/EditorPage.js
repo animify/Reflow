@@ -1,13 +1,15 @@
 
 import React from 'react';
 import Canvas from '../containers/Canvas';
-import Boards from '../containers/boards/Boards';
 import PropertiesPane from '../containers/properties/PropertiesPane';
+import Toolbar from '../containers/toolbar/Toolbar';
+import LeftPanel from '../containers/leftPanel/LeftPanel';
 
 const EditorPage = () => (
     <div id="layout">
         <div id="panel">
-            <Boards />
+            <LeftPanel />
+            <Toolbar />
             <PropertiesPane />
         </div>
         <Canvas />

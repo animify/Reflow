@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 export default class Board extends PureComponent {
     render() {
-        const { board, selected, click } = this.props;
+        const { board, selected, clickHandler } = this.props;
 
         return (
             <Fragment>
-                <div role="presentation" className={selected ? 'board selected' : 'board'} onClick={click}>
+                <div role="presentation" className={selected ? 'board selected' : 'board'} onClick={selected ? null : clickHandler}>
                     <h5>{board.title}</h5>
                 </div>
             </Fragment>
@@ -17,6 +17,6 @@ export default class Board extends PureComponent {
 
 Board.propTypes = {
     board: PropTypes.object.isRequired,
-    click: PropTypes.func.isRequired,
+    clickHandler: PropTypes.func.isRequired,
     selected: PropTypes.bool.isRequired,
 };

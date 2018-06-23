@@ -22,14 +22,30 @@
     height: 100%;
 
 #panel
-    #boards
+    .left-panel
         fixed: top left;
-        width: 100%;
-        background-color: $uiColor.dark-100;
+        width: 220px;
+        height: 100%;
+        background-color: $uiColor.dark-90;
         z-index: 2000;
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         color: #fff;
+
+        .layers
+            .layer
+                color: $textColor.body;
+                font-size: $fontSize.small;
+                padding: 4px 20px;
+                border: 1px solid transparent;
+
+                &.hovering
+                    border-color: $color.base;
+
+                &.selected
+                    border-color: $color.base;
+                    background-color: $color.base;
+                    color: #fff;
 
         .board
             padding: 12px;
@@ -50,7 +66,7 @@
 
 #properties
     fixed: top right;
-    width: 230px;
+    width: 220px;
     height: 100%;
     background-color: $uiColor.dark-90;
     z-index: 2000;
@@ -68,3 +84,12 @@
             font-size: $fontSize.small;
             margin-bottom: 4px;
             line-height: 1.68;
+
+#toolbar
+    fixed: top left;
+    height: 44px;
+    width: 100%;
+    display: flex;
+    content: ' ';
+    z-index: 1800;
+    background-color: $uiColor.dark-100;

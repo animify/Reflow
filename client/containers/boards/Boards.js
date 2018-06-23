@@ -16,7 +16,7 @@ const mapDispatchToProps = dispatch => ({
 const Boards = ({ boards, changeBoard, currentPage }) => (
     <div id="boards">
         {Object.entries(boards.list).map(([id, board]) => (
-            <Board key={id} board={board} selected={currentPage === id} click={() => changeBoard(id, board.entities)} />
+            <Board key={id} board={board} selected={currentPage === id} clickHandler={() => changeBoard(id, board.entities)} />
         ))}
     </div>
 );

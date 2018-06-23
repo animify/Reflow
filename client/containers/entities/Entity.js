@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Draggable from '../Draggable';
@@ -34,7 +34,9 @@ const entityMap = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-    entity: state.doc.present.entities[ownProps.entityId]
+    entity: state.doc.present.entities[ownProps.entityId],
+    selected: state.doc.present.selected.some(e => e === ownProps.entityId),
+    hovering: state.doc.present.hovering === ownProps.entityId
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -65,19 +67,17 @@ const getEntityComponent = (type) => {
     return null;
 };
 
-class Entity extends Component {
-    shouldComponentUpdate(nextProps) {
-        return nextProps.entity !== this.props.entity;
-    }
-
+class Entity extends PureComponent {
     render() {
-        const { entity, entityId, onMouseEnter, onMouseLeave, onMouseDown } = this.props;
+        const { entity, entityId, onMouseEnter, onMouseLeave, onMouseDown, selected, hovering } = this.props;
         const entityOptions = getEntityComponent(entity.type);
         const style = {
             opacity: entity.opacity,
             width: entity.size.w,
             height: entity.size.h,
         };
+
+        console.log('rendering entity', entityId);
 
         if (entityOptions === null) {
             return null;
@@ -103,7 +103,7 @@ class Entity extends Component {
                         style={style}
                     >
                         <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
-                        <EntityComponent entity={entity} />
+                        <EntityComponent entity={entity} selected={selected} hovering={hovering} />
                     </g>
                 </Draggable>
             );
@@ -125,6 +125,8 @@ class Entity extends Component {
 Entity.propTypes = {
     entityId: PropTypes.string.isRequired,
     entity: PropTypes.object.isRequired,
+    selected: PropTypes.bool.isRequired,
+    hovering: PropTypes.bool.isRequired,
     onMouseEnter: PropTypes.func.isRequired,
     onMouseLeave: PropTypes.func.isRequired,
     onMouseDown: PropTypes.func.isRequired,
