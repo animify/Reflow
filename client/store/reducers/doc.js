@@ -2,26 +2,38 @@ import produce from 'immer';
 
 const doc = produce((draft, action) => {
     switch (action.type) {
-        case 'ENTITY::MOUSEENTER':
-            draft.entities[action.id].hovering = true;
-            break;
-
-        case 'ENTITY::MOUSELEAVE':
-            draft.entities[action.id].hovering = false;
-            break;
-
-        case 'ENTITY::MOUSEDOWN':
-            draft.entities[action.id].selected = true;
-            break;
-
         case 'ENTITY::SET':
+            console.log('Setting entities:', action.payload);
+
             draft.currentPage = action.payload.currentPage;
             draft.entitiesOrder = action.payload.entitiesOrder;
             draft.entities = action.payload.entities;
             break;
 
+        case 'ENTITY::TOGGLE_SELECT':
+            console.log('toggling select');
+            if (action.payload.replace) {
+                draft.selected = [action.payload.id];
+            } else {
+                const indexSelected = draft.selected.findIndex(s => s === action.payload.id);
+
+                if (action.payload.select && indexSelected === -1) {
+                    draft.selected.push(action.payload.id);
+                }
+
+                if (!action.payload.select && indexSelected > -1) {
+                    draft.selected.splice(indexSelected, 1);
+                }
+            }
+
+            break;
+
+        case 'ENTITY::TOGGLE_HOVER':
+            draft.hovering = action.payload.hover ? action.payload.id : null;
+            break;
+
         case 'DOCUMENT::DESELECT_ALL':
-            draft.entitiesOrder.forEach(id => (draft.entities[id].selected = false));
+            draft.selected = [];
             break;
 
         case 'ENTITY::UPDATE':

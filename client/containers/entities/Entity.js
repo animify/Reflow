@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Draggable from '../Draggable';
-import { mouseEnter, mouseLeave, mouseDown, updateEntity } from '../../store/actions';
+import { toggleHoverEntity, toggleSelectEntity, updateEntity } from '../../store/actions';
 import store from '../../store';
 import Screen from './Screen';
 import Image from './Image';
@@ -38,9 +38,9 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-    onMouseEnter: () => dispatch(mouseEnter(ownProps.entityId)),
-    onMouseLeave: () => dispatch(mouseLeave(ownProps.entityId)),
-    onMouseDown: () => dispatch(mouseDown(ownProps.entityId)),
+    onMouseEnter: () => dispatch(toggleHoverEntity(ownProps.entityId, true)),
+    onMouseLeave: () => dispatch(toggleHoverEntity(ownProps.entityId, false)),
+    onMouseDown: () => dispatch(toggleSelectEntity(ownProps.entityId, true, true)),
 });
 
 const handlers = {
@@ -84,23 +84,6 @@ class Entity extends Component {
         }
 
         const EntityComponent = entityOptions.component;
-
-        // const dragWrap = children => (
-        //     <Draggable
-        //         grid={null}
-        //         disabled={entity.locked}
-        //         position={entity.position}
-        //         onMouseDown={onMouseDown}
-        //         onStart={(e, i) => handlers.onStart(entityId, e, i)}
-        //         onDrag={(e, i) => handlers.onDrag(entityId, e, i)}
-        //         onStop={(e, data) => handlers.onStop(entityId, data)}
-        //         scale={1}
-        //     >
-        //         {children}
-        //     </Draggable>
-        // );
-
-        // const ConditionalWrap = ({ children }) => (entityOptions.options.draggable ? dragWrap(children) : children);
 
         if (entityOptions.options.draggable) {
             return (

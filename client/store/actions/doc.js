@@ -1,22 +1,24 @@
-export const mouseEnter = id => ({
-    type: 'ENTITY::MOUSEENTER',
-    id
-});
-
-export const mouseLeave = id => ({
-    type: 'ENTITY::MOUSELEAVE',
-    id
-});
-
-export const mouseDown = id => ({
-    type: 'ENTITY::MOUSEDOWN',
-    id
-});
-
 export const updateEntity = (id, payload) => ({
     type: 'ENTITY::UPDATE',
     id,
     payload
+});
+
+export const toggleSelectEntity = (id, select, replace) => ({
+    type: 'ENTITY::TOGGLE_SELECT',
+    payload: {
+        id,
+        select,
+        replace
+    }
+});
+
+export const toggleHoverEntity = (id, hover) => ({
+    type: 'ENTITY::TOGGLE_HOVER',
+    payload: {
+        id,
+        hover
+    }
 });
 
 export const switchBoard = payload => ({

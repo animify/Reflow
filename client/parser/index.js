@@ -8,6 +8,8 @@ export default {
         currentPage: sample.currentPage,
         entitiesOrder: Object.keys(sample.pages[sample.currentPage].entities),
         entities: sample.pages[sample.currentPage].entities,
+        selected: [],
+        hovering: null
     },
     boards: {
         list: sample.pages

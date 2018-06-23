@@ -10,7 +10,7 @@ const mapStateToProps = state => ({
 const Entities = ({ entitiesOrder }) => (
     <Fragment>
         {entitiesOrder.map(entityId => (
-            <Entity key={entityId} entityId={entityId} />
+            <Entity key={`entity-${entityId}`} entityId={entityId} />
         ))}
     </Fragment >
 );

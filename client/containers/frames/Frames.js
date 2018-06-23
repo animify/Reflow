@@ -4,21 +4,28 @@ import PropTypes from 'prop-types';
 import Frame from './Frame';
 
 const mapStateToProps = state => ({
-    framableEntities: Object.values(state.doc.present.entities).filter(en => en.selected || en.hovering),
+    selectedEntities: state.doc.present.selected,
+    hoveringEntity: state.doc.present.hovering,
     scale: state.canvas.scale
 });
 
-const Frames = ({ framableEntities, scale }) => (
+const Frames = ({ selectedEntities, hoveringEntity, scale }) => (
     <g id="frames">
-        {framableEntities.map(entity => (
-            <Frame key={`frame-${entity.id}`} entity={entity} scale={scale} />
+        {hoveringEntity !== null && <Frame entityId={hoveringEntity} scale={scale} />}
+        {selectedEntities.map(entityId => (
+            <Frame key={`frame-${entityId}`} entityId={entityId} scale={scale} />
         ))}
     </g>
 );
 
+Frames.defaultProps = {
+    hoveringEntity: null,
+};
+
 Frames.propTypes = {
     scale: PropTypes.number.isRequired,
-    framableEntities: PropTypes.array.isRequired,
+    selectedEntities: PropTypes.array.isRequired,
+    hoveringEntity: PropTypes.string,
 };
 
 export default connect(

@@ -18,10 +18,11 @@ export default class Draggable extends PureComponent {
     constructor(props) {
         super(props);
 
+        this.dragging = false;
+        this.dragged = false;
+        this.scale = 1;
+
         this.state = {
-            dragging: false,
-            dragged: false,
-            scale: 1,
             x: props.position ? props.position.x : props.defaultPosition.x,
             y: props.position ? props.position.y : props.defaultPosition.y,
         };
@@ -40,19 +41,20 @@ export default class Draggable extends PureComponent {
 
     onDragStart = (e, coreData) => {
         const { canvas } = store.getState();
-        console.log(canvas.scale);
+
         const shouldStart = this.props.onStart(e, createDraggableData(this, coreData, canvas.scale));
         if (shouldStart === false) return false;
 
-        this.setState({ dragging: true, dragged: true, scale: canvas.scale });
+        this.scale = canvas.scale;
     };
 
     onDrag = (e, coreData) => {
-        if (!this.state.dragging) return false;
-
-        const uiData = createDraggableData(this, coreData, this.state.scale);
+        const uiData = createDraggableData(this, coreData, this.scale);
         const shouldUpdate = this.props.onDrag(e, uiData);
         if (shouldUpdate === false) return false;
+
+        this.dragging = true;
+        this.dragged = true;
 
         this.setState({
             x: uiData.x,
@@ -61,14 +63,12 @@ export default class Draggable extends PureComponent {
     };
 
     onDragStop = (e, coreData) => {
-        if (!this.state.dragging) return false;
+        if (!this.dragging) return false;
 
-        const shouldStop = this.props.onStop(e, createDraggableData(this, coreData, this.state.scale));
+        const shouldStop = this.props.onStop(e, createDraggableData(this, coreData, this.scale));
         if (shouldStop === false) return false;
 
-        this.setState({
-            dragging: false,
-        });
+        this.dragging = false;
     };
 
     render() {

@@ -39,10 +39,10 @@ const properties = {
         valueLabelMap: ['W', 'H'],
     },
 };
-const propertiesMap = Object.keys(properties);
 
 const mapStateToProps = state => ({
-    entities: Object.values(state.doc.present.entities).filter(e => e.selected),
+    entities: state.doc.present.entities,
+    selected: state.doc.present.selected
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -62,12 +62,13 @@ class PropertiesPane extends PureComponent {
                 }
 
             this.props.propChange(`${entity.type}${entity.id}`, val);
-        })
+        });
     }
 
     render() {
-        const { entities } = this.props;
-        const { common, different } = filterCommonProperties(entities, properties);
+        const { entities, selected } = this.props;
+        const selectedEntities = Object.values(entities).filter(e => selected.includes(`${e.type}${e.id}`))
+        const { common, different } = filterCommonProperties(selectedEntities, properties);
 
         different.forEach(p => {
             const newValue = properties[p].valueMap.length === 1 ? null : properties[p].valueMap.reduce((o, v) => {
@@ -92,7 +93,8 @@ class PropertiesPane extends PureComponent {
 }
 
 PropertiesPane.propTypes = {
-    entities: PropTypes.array.isRequired,
+    entities: PropTypes.object.isRequired,
+    selected: PropTypes.array.isRequired,
 };
 
 export default connect(
