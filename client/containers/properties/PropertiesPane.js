@@ -50,8 +50,8 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 class PropertiesPane extends PureComponent {
-    onChange = (key, newValue, nested) => {
-        this.props.entities.forEach((entity) => {
+    onChange = (selectedEntities, key, newValue, nested) => {
+        selectedEntities.forEach((entity) => {
             const val = nested ? {
                 [key]: {
                     ...entity[key],
@@ -84,7 +84,7 @@ class PropertiesPane extends PureComponent {
             <Fragment>
                 {commonProps.length > 0 && (<div id="properties">
                     {commonProps.map(([key, value]) => (
-                        <Property key={key} ownMap={properties[key]} prop={key} value={value} commitChange={(newValue, nested) => this.onChange(key, newValue, nested)} />
+                        <Property key={key} ownMap={properties[key]} prop={key} value={value} commitChange={(newValue, nested) => this.onChange(selectedEntities, key, newValue, nested)} />
                     ))}
                 </div>)}
             </Fragment>
