@@ -2,9 +2,18 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-const mapStateToProps = (state, ownProps) => ({
-    entity: state.doc.present.entities[ownProps.entityId]
-});
+
+const makeMapStateToProps = (initialState, initialProps) => {
+    const { entityId } = initialProps;
+    const mapStateToProps = (state) => {
+        const { entities } = state.doc.present;
+        const entity = entities[entityId];
+        return {
+            entity,
+        };
+    };
+    return mapStateToProps;
+};
 
 const Frame = ({ entity, scale }) => (
     <g key={entity.id} transform={`translate(${entity.position.x}, ${entity.position.y})`}>
@@ -19,5 +28,5 @@ Frame.propTypes = {
 };
 
 export default connect(
-    mapStateToProps,
+    makeMapStateToProps,
 )(Frame);

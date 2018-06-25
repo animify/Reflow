@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 const parseValue = (unparsedValue, type) => {
@@ -13,7 +13,7 @@ const parseValue = (unparsedValue, type) => {
     return inputValue;
 };
 
-export default class Property extends Component {
+export default class Property extends PureComponent {
     componentWillMount() {
         this.resetPropsState(this.props);
     }

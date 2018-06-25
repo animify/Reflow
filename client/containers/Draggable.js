@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { DraggableCore } from 'react-draggable';
 import store from '../store';
 
@@ -17,7 +17,7 @@ const createDraggableData = (draggable, coreData, scale) => {
     };
 }
 
-export default class Draggable extends PureComponent {
+export default class Draggable extends Component {
     constructor(props) {
         super(props);
 
@@ -32,12 +32,8 @@ export default class Draggable extends PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.position &&
-            (!this.props.position ||
-                nextProps.position.x !== this.props.position.x ||
-                nextProps.position.y !== this.props.position.y
-            )
-        ) {
+        if (nextProps !== this.props && (nextProps.position.x !== this.props.position.x ||
+            nextProps.position.y !== this.props.position.y)) {
             this.setState({ x: nextProps.position.x, y: nextProps.position.y });
         }
     }

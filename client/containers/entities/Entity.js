@@ -33,11 +33,20 @@ const entityMap = {
     }
 };
 
-const mapStateToProps = (state, ownProps) => ({
-    entity: state.doc.present.entities[ownProps.entityId],
-    hovering: state.doc.present.hovering === ownProps.entityId,
-    isPresenting: state.canvas.presenting
-});
+
+const makeMapStateToProps = (initialState, initialProps) => {
+    const { entityId } = initialProps;
+    const mapStateToProps = (state) => {
+        const { entities, hovering } = state.doc.present;
+        const entity = entities[entityId];
+        return {
+            entity,
+            hovering: hovering === entityId,
+            isPresenting: state.canvas.presenting
+        };
+    };
+    return mapStateToProps;
+};
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onMouseEnter: () => dispatch(toggleHoverEntity(ownProps.entityId, true)),
@@ -71,6 +80,10 @@ const getEntityComponent = (type) => {
 };
 
 class Entity extends PureComponent {
+    // shouldComponentUpdate(nextProps) {
+    //     return nextProps.entityId != this.props.entityId;
+    // }
+
     render() {
         const { entity, entityId, onMouseEnter, onMouseLeave, onMouseDown, hovering, isPresenting } = this.props;
         const entityOptions = getEntityComponent(entity.type);
@@ -134,7 +147,7 @@ Entity.propTypes = {
 };
 
 export default connect(
-    mapStateToProps,
+    makeMapStateToProps,
     mapDispatchToProps
 )(Entity);
 
