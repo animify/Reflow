@@ -7,8 +7,8 @@ export default class Board extends PureComponent {
 
         return (
             <Fragment>
-                <div role="presentation" className={selected ? 'board selected' : 'board'} onClick={selected ? null : clickHandler}>
-                    <h5>{board.title}</h5>
+                <div role="presentation" className={selected ? 'layer selected' : 'layer'} onClick={selected ? null : clickHandler}>
+                    <span>{board.title}</span>
                 </div>
             </Fragment>
         );

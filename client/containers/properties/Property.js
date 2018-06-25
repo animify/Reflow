@@ -62,37 +62,35 @@ export default class Property extends Component {
     };
 
     render() {
-        const { ownMap, prop, value } = this.props;
+        const { ownMap, prop, value, readOnly } = this.props;
 
         return (
             <Fragment>
-                <div className="property">
-                    <h5>{ownMap.label}</h5>
-                    {/* <p>{JSON.stringify(value)}</p> */}
-                    {ownMap.nested ? ownMap.valueMap.map((val, i) => (
-                        <label className="input" key={`${prop}-${val}`}>
-                            <span>{ownMap.valueLabelMap[i]}</span>
-                            <input
-                                type="text"
-                                name={val}
-                                value={this.state[val]}
-                                onKeyPress={this.handleKeyPress}
-                                onChange={this.handleInputChange}
-                                onBlur={() => this.commitValue(val)}
-                            />
-                        </label>
-                    )) : <label className="input" key={`${prop}-${ownMap.valueMap}`}>
-                            <span>{ownMap.valueMap}</span>
-                            <input
-                                type="text"
-                                name={ownMap.valueMap}
-                                value={this.state[ownMap.valueMap]}
-                                onKeyPress={this.handleKeyPress}
-                                onChange={this.handleInputChange}
-                                onBlur={() => this.commitValue(ownMap.valueMap)}
-                            />
-                        </label>}
-                </div>
+                <h5>{ownMap.label}</h5>
+                {/* <p>{JSON.stringify(value)}</p> */}
+                {ownMap.nested ? ownMap.valueMap.map((val, i) => (
+                    <label className="input" key={`${prop}-${val}`} disabled={readOnly}>
+                        <span>{ownMap.valueLabelMap[i]}</span>
+                        <input
+                            type="text"
+                            name={val}
+                            value={this.state[val]}
+                            onKeyPress={this.handleKeyPress}
+                            onChange={this.handleInputChange}
+                            onBlur={() => this.commitValue(val)}
+                        />
+                    </label>
+                )) : <label className="input" key={`${prop}-${ownMap.valueMap}`} disabled={readOnly}>
+                        <span>{ownMap.valueMap}</span>
+                        <input
+                            type="text"
+                            name={ownMap.valueMap}
+                            value={this.state[ownMap.valueMap]}
+                            onKeyPress={this.handleKeyPress}
+                            onChange={this.handleInputChange}
+                            onBlur={() => this.commitValue(ownMap.valueMap)}
+                        />
+                    </label>}
             </Fragment>
         );
     }
@@ -100,6 +98,7 @@ export default class Property extends Component {
 
 Property.propTypes = {
     ownMap: PropTypes.object.isRequired,
+    readOnly: PropTypes.bool.isRequired,
     prop: PropTypes.string.isRequired,
     commitChange: PropTypes.func.isRequired,
     value: PropTypes.oneOfType([

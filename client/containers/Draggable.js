@@ -3,12 +3,15 @@ import { DraggableCore } from 'react-draggable';
 import store from '../store';
 
 const createDraggableData = (draggable, coreData, scale) => {
+    const deltaX = Math.round(coreData.deltaX / scale);
+    const deltaY = Math.round(coreData.deltaY / scale);
+
     return {
         node: coreData.node,
-        x: draggable.state.x + coreData.deltaX / scale,
-        y: draggable.state.y + coreData.deltaY / scale,
-        deltaX: coreData.deltaX / scale,
-        deltaY: coreData.deltaY / scale,
+        x: draggable.state.x + deltaX,
+        y: draggable.state.y + deltaY,
+        deltaX: deltaX,
+        deltaY: deltaY,
         lastX: draggable.state.x,
         lastY: draggable.state.y
     };
@@ -23,8 +26,8 @@ export default class Draggable extends PureComponent {
         this.scale = 1;
 
         this.state = {
-            x: props.position ? props.position.x : props.defaultPosition.x,
-            y: props.position ? props.position.y : props.defaultPosition.y,
+            x: props.position.x,
+            y: props.position.y,
         };
     }
 

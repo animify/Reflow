@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Board from './Board';
@@ -14,11 +14,14 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const Boards = ({ boards, changeBoard, currentPage }) => (
-    <div id="boards">
-        {Object.entries(boards.list).map(([id, board]) => (
-            <Board key={id} board={board} selected={currentPage === id} clickHandler={() => changeBoard(id, board.entities)} />
-        ))}
-    </div>
+    <Fragment>
+        <h5 className="layer-heading">Boards</h5>
+        <div className="layers">
+            {Object.entries(boards.list).map(([id, board]) => (
+                <Board key={id} board={board} selected={currentPage === id} clickHandler={() => changeBoard(id, board.entities)} />
+            ))}
+        </div>
+    </Fragment>
 );
 
 Boards.propTypes = {

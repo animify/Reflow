@@ -1,13 +1,13 @@
 .button
-    @extend .ph4, .pv2;
+    padding: 4px 12px;
     position: relative;
     display: inline-block;
     outline: 0;
     border: 0;
-    border: 1px solid $color.dim;
+    border: 1px solid $uiColor.dark-80;
     border-radius: $borderRadius.base;
-    background-color: $color.white;
-    color: $textColor.heading;
+    background-color: $uiColor.dark-80;
+    color: $textColor.body;
     font-family: $fontFamily.body;
     font-weight: $fontWeight.semiBold;
     font-size: $fontSize.body;
@@ -24,12 +24,13 @@
         box-shadow: none;
 
     &:hover
-        background-color: $color.snow;
-        color: $textColor.heading;
+        background-color: $uiColor.dark-70;
+        color: $textColor.white;
 
     &:active
-        background-color: $color.dim;
-        color: $textColor.heading;
+        color: $textColor.white;
+        background-color: $uiColor.dark-60;
+        border-color: @background-color;
 
     for size in $sizeList
         &.{size}

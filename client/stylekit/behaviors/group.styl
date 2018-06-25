@@ -6,9 +6,9 @@
         border-radius: 0;
 
         &.selected
-            background-color: $color.dim;
+            background-color: $color.base;
             border: @background-color;
-            color: $color.heading;
+            color: $textColor.white;
             user-select: none;
             pointer-events: none;
 
@@ -17,7 +17,7 @@
                 margin-left: -1px !important;
 
         &:first-of-type
-            border-radius: $borderRadius.base 0 0 (((((((((((((((($borderRadius.base))))))))))))))));
+            border-radius: $borderRadius.base 0 0 (((((((((((((((((((($borderRadius.base))))))))))))))))))));
 
         &:last-of-type
             border-radius: 0 $borderRadius.base $borderRadius.base 0;
@@ -37,4 +37,4 @@
                 border-radius: $borderRadius.base $borderRadius.base 0 0;
 
             &:last-of-type
-                border-radius: 0 0 $borderRadius.base ((((((((((($borderRadius.base)))))))))));
+                border-radius: 0 0 $borderRadius.base ((((((((((((((($borderRadius.base)))))))))))))));

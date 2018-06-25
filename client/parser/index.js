@@ -1,5 +1,6 @@
 import sample from '../data/sample.json';
 
+console.log(sample);
 console.log(Object.keys(sample.pages[sample.currentPage].entities));
 
 export default {

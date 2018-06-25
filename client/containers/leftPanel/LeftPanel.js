@@ -3,10 +3,10 @@ import Boards from '../boards/Boards';
 import Layers from '../layers/Layers';
 
 const LeftPanel = () => (
-    <div className="left-panel">
+    <aside id="left-panel">
         <Boards />
         <Layers />
-    </div>
+    </aside>
 );
 
 export default LeftPanel;

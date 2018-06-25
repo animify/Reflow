@@ -10,3 +10,8 @@ export const zoom = (matrix, scale) => ({
         scale
     }
 });
+
+export const setPresenting = payload => ({
+    type: 'CANVAS::SET_PRESENTING',
+    payload
+});

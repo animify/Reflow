@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Layer from './Layer';
@@ -20,21 +20,23 @@ const mapDispatchToProps = dispatch => ({
 const Layers = ({ entitiesOrder, selectedEntities, hoveringEntity, onMouseEnter, onMouseLeave, onMouseDown }) => {
     const entities = store.getState().doc.present.entities;
     return (
-        <div className="layers">
-            <h5>Layers</h5>
-            {entitiesOrder.map(entityId => (
-                <Layer
-                    key={`layer-${entityId}`}
-                    entityId={entityId}
-                    selected={selectedEntities.includes(entityId)}
-                    hovering={hoveringEntity === entityId}
-                    text={entities[entityId].caption}
-                    mouseEnterHandler={onMouseEnter}
-                    mouseLeaveHandler={onMouseLeave}
-                    mouseDownHandler={onMouseDown}
-                />
-            ))}
-        </div >
+        <Fragment>
+            <h5 className="layer-heading">Layers</h5>
+            <div className="layers">
+                {entitiesOrder.map(entityId => (
+                    <Layer
+                        key={`layer-${entityId}`}
+                        entityId={entityId}
+                        selected={selectedEntities.includes(entityId)}
+                        hovering={hoveringEntity === entityId}
+                        text={entities[entityId].caption || entityId}
+                        mouseEnterHandler={onMouseEnter}
+                        mouseLeaveHandler={onMouseLeave}
+                        mouseDownHandler={onMouseDown}
+                    />
+                ))}
+            </div>
+        </Fragment>
     );
 };
 

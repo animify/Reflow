@@ -35,7 +35,8 @@ const entityMap = {
 
 const mapStateToProps = (state, ownProps) => ({
     entity: state.doc.present.entities[ownProps.entityId],
-    hovering: state.doc.present.hovering === ownProps.entityId
+    hovering: state.doc.present.hovering === ownProps.entityId,
+    isPresenting: state.canvas.presenting
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -71,15 +72,13 @@ const getEntityComponent = (type) => {
 
 class Entity extends PureComponent {
     render() {
-        const { entity, entityId, onMouseEnter, onMouseLeave, onMouseDown, selected, hovering } = this.props;
+        const { entity, entityId, onMouseEnter, onMouseLeave, onMouseDown, hovering, isPresenting } = this.props;
         const entityOptions = getEntityComponent(entity.type);
         const style = {
             opacity: entity.opacity,
             width: entity.size.w,
             height: entity.size.h,
         };
-
-        console.log('rendering entity', entityId);
 
         if (entityOptions === null) {
             return null;
@@ -91,7 +90,7 @@ class Entity extends PureComponent {
             return (
                 <Draggable
                     grid={null}
-                    disabled={Boolean(entity.locked)}
+                    disabled={isPresenting || Boolean(entity.locked)}
                     position={entity.position}
                     onMouseDown={e => handlers.onMouseDown(e, onMouseDown)}
                     onStart={(e, i) => handlers.onStart(entityId, e, i)}
@@ -105,7 +104,7 @@ class Entity extends PureComponent {
                         style={style}
                     >
                         <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
-                        <EntityComponent entity={entity} hovering={hovering} />
+                        <EntityComponent entity={entity} hovering={hovering} isPresenting={isPresenting} />
                     </g>
                 </Draggable>
             );
@@ -118,7 +117,7 @@ class Entity extends PureComponent {
                 style={style}
             >
                 <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
-                <EntityComponent entity={entity} />
+                <EntityComponent entity={entity} isPresenting={isPresenting} />
             </g>
         );
     }
@@ -128,6 +127,7 @@ Entity.propTypes = {
     entityId: PropTypes.string.isRequired,
     entity: PropTypes.object.isRequired,
     hovering: PropTypes.bool.isRequired,
+    isPresenting: PropTypes.bool.isRequired,
     onMouseEnter: PropTypes.func.isRequired,
     onMouseLeave: PropTypes.func.isRequired,
     onMouseDown: PropTypes.func.isRequired,

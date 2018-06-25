@@ -42,7 +42,8 @@ const properties = {
 
 const mapStateToProps = state => ({
     entities: state.doc.present.entities,
-    selected: state.doc.present.selected
+    selected: state.doc.present.selected,
+    isPresenting: state.canvas.presenting
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -66,7 +67,7 @@ class PropertiesPane extends PureComponent {
     }
 
     render() {
-        const { entities, selected } = this.props;
+        const { entities, selected, isPresenting } = this.props;
         const selectedEntities = Object.values(entities).filter(e => selected.includes(`${e.type}${e.id}`))
         const { common, different } = filterCommonProperties(selectedEntities, properties);
 
@@ -82,11 +83,13 @@ class PropertiesPane extends PureComponent {
 
         return (
             <Fragment>
-                {commonProps.length > 0 && (<div id="properties">
+                {commonProps.length > 0 && (<aside id="properties">
                     {commonProps.map(([key, value]) => (
-                        <Property key={key} ownMap={properties[key]} prop={key} value={value} commitChange={(newValue, nested) => this.onChange(selectedEntities, key, newValue, nested)} />
+                        <div key={key} className={isPresenting ? 'property ignore-events' : 'property'} >
+                            <Property ownMap={properties[key]} prop={key} value={value} commitChange={(newValue, nested) => this.onChange(selectedEntities, key, newValue, nested)} readOnly={isPresenting} />
+                        </div>
                     ))}
-                </div>)}
+                </aside>)}
             </Fragment>
         );
     }
@@ -95,6 +98,7 @@ class PropertiesPane extends PureComponent {
 PropertiesPane.propTypes = {
     entities: PropTypes.object.isRequired,
     selected: PropTypes.array.isRequired,
+    isPresenting: PropTypes.bool.isRequired,
 };
 
 export default connect(

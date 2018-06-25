@@ -22,13 +22,13 @@ export default class Screen extends PureComponent {
     }
 
     render() {
-        const { entity, hovering } = this.props;
+        const { entity, hovering, isPresenting } = this.props;
         const { innerElements } = this.state;
 
         return (
             <Fragment>
                 <image width={entity.size.w} height={entity.size.h} xlinkHref={entity.source.id} />
-                {(hovering) && innerElements.map(ie => (
+                {(!isPresenting && hovering) && innerElements.map(ie => (
                     <rect
                         key={ie.id}
                         x={ie.x}
@@ -54,4 +54,5 @@ export default class Screen extends PureComponent {
 Screen.propTypes = {
     entity: PropTypes.object.isRequired,
     hovering: PropTypes.bool.isRequired,
+    isPresenting: PropTypes.bool.isRequired,
 };
