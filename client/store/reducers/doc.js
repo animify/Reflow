@@ -1,4 +1,5 @@
 import produce from 'immer';
+import cuid from 'cuid';
 
 const doc = produce((draft, action) => {
     switch (action.type) {
@@ -14,6 +15,7 @@ const doc = produce((draft, action) => {
 
         case 'ENTITY::TOGGLE_SELECT':
             console.log('toggling select');
+
             if (action.payload.replace) {
                 draft.selected = [action.payload.id];
             } else {
@@ -36,6 +38,28 @@ const doc = produce((draft, action) => {
 
         case 'DOCUMENT::DESELECT_ALL':
             draft.selected = [];
+            break;
+
+        case 'DOCUMENT::DUPLICATE_SELECTED':
+            console.log('duplicating');
+            const newIds = draft.selected.map((entityId) => {
+                const shortId = cuid();
+                const newId = `${draft.entities[entityId].type}${shortId}`;
+                draft.entities[newId] = {
+                    ...draft.entities[entityId],
+                    id: shortId,
+                    position: {
+                        x: draft.entities[entityId].position.x + 50,
+                        y: draft.entities[entityId].position.y + 50,
+                    }
+                };
+
+                return newId;
+            });
+
+            draft.hovering = null;
+            draft.selected = newIds;
+            draft.entitiesOrder = [...draft.entitiesOrder, ...newIds];
             break;
 
         case 'ENTITY::UPDATE':

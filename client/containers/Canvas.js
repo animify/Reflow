@@ -1,16 +1,17 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import { HotKeys } from 'react-hotkeys';
 import { ActionCreators } from 'redux-undo';
 import PropTypes from 'prop-types';
 import Entities from './Entities';
 import Frames from './frames/Frames';
-import { pan, zoom, deselectAllEntities } from '../store/actions';
+import { pan, zoom, deselectAllEntities, duplicateSelected } from '../store/actions';
 import { scaleWheelDelta, clientPoint } from '../utils/helpers';
 
 let isCmdDown = false;
 
 const keyMap = {
+    duplicate: 'mod+d',
     undo: 'mod+z',
     redo: 'mod+shift+z',
     mod: 'mod',
@@ -34,12 +35,13 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     onUndo: () => dispatch(ActionCreators.undo()),
     onRedo: () => dispatch(ActionCreators.redo()),
+    onDuplicate: () => dispatch(duplicateSelected()),
     pan: (x, y) => dispatch(pan(x, y)),
     deselectAll: () => dispatch(deselectAllEntities()),
     zoom: (matrix, multiplier) => dispatch(zoom(matrix, multiplier)),
 });
 
-class Canvas extends Component {
+class Canvas extends PureComponent {
     constructor(props) {
         super(props);
 
@@ -50,10 +52,6 @@ class Canvas extends Component {
 
     componentDidMount() {
         this.svgRenderer.addEventListener('wheel', this.onWheel, { passive: true });
-    }
-
-    shouldComponentUpdate(nextProps) {
-        return nextProps.canvas.matrix !== this.props.canvas.matrix;
     }
 
     componentWillUnmount() {
@@ -89,22 +87,30 @@ class Canvas extends Component {
     }
 
     pan(x, y) {
-        const newMatrix = this.props.canvas.matrix.translate(x, y);
-        this.props.pan(newMatrix);
+        window.requestAnimationFrame(() => {
+            const newMatrix = this.props.canvas.matrix.translate(x, y);
+            this.props.pan(newMatrix);
+        });
     }
 
     zoom(point, multiplier) {
-        const newMatrix = this.props.canvas.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
-        this.props.zoom(newMatrix, this.props.canvas.scale * multiplier);
+        window.requestAnimationFrame(() => {
+            const newMatrix = this.props.canvas.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
+            this.props.zoom(newMatrix, this.props.canvas.scale * multiplier);
+        });
     }
 
     render() {
-        const { onUndo, onRedo, canvas, deselectAll } = this.props;
+        const { onUndo, onRedo, canvas, deselectAll, onDuplicate } = this.props;
         const matrix = canvas.matrix;
         const handlers = {
             ...keyHandlers,
             undo: onUndo,
-            redo: onRedo
+            redo: onRedo,
+            duplicate: (event) => {
+                event.preventDefault();
+                onDuplicate();
+            },
         };
 
         return (
@@ -130,6 +136,7 @@ Canvas.propTypes = {
     onRedo: PropTypes.func.isRequired,
     pan: PropTypes.func.isRequired,
     zoom: PropTypes.func.isRequired,
+    onDuplicate: PropTypes.func.isRequired,
     deselectAll: PropTypes.func.isRequired,
 };
 

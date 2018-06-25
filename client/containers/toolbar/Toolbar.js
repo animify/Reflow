@@ -14,7 +14,7 @@ const mapDispatchToProps = dispatch => ({
 const Toolbar = ({ canvas, togglePresenting }) => (
     <section id="toolbar">
         <div className="item title">{canvas.title}</div>
-        <div className="item scale">{canvas.scale.toFixed(2)}%</div>
+        <div className="item scale">{(canvas.scale * 100).toFixed(2)}%</div>
         <div className="item group end">
             <span role="presentation" className={canvas.presenting ? 'button tiny' : 'button tiny selected'} onClick={() => togglePresenting(false)}>Editor</span>
             <span role="presentation" className={canvas.presenting ? 'button tiny selected' : 'button tiny'} onClick={() => togglePresenting(true)}>Player</span>

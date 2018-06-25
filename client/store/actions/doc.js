@@ -30,6 +30,10 @@ export const deselectAllEntities = () => ({
     type: 'DOCUMENT::DESELECT_ALL'
 });
 
+export const duplicateSelected = () => ({
+    type: 'DOCUMENT::DUPLICATE_SELECTED'
+});
+
 export const setEntities = (currentPage, entities) => ({
     type: 'ENTITY::SET',
     payload: {
@@ -38,3 +42,4 @@ export const setEntities = (currentPage, entities) => ({
         entitiesOrder: Object.keys(entities)
     }
 });
+
