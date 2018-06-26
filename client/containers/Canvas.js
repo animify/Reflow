@@ -7,24 +7,31 @@ import Entities from './Entities';
 import Frames from './frames/Frames';
 import { pan, zoom, deselectAllEntities, duplicateSelected } from '../store/actions';
 import { scaleWheelDelta, clientPoint } from '../utils/helpers';
-
-let isCmdDown = false;
+import Keys from '../utils/hotkeys';
 
 const keyMap = {
     duplicate: 'mod+d',
     undo: 'mod+z',
     redo: 'mod+shift+z',
     mod: 'mod',
-    commandDown: { sequence: 'alt', action: 'keydown' },
-    commandUp: { sequence: 'alt', action: 'keyup' },
+    commandDown: { sequence: 'mod', action: 'keydown' },
+    commandUp: { sequence: 'mod', action: 'keyup' },
+    optionDown: { sequence: 'alt', action: 'keydown' },
+    optionUp: { sequence: 'alt', action: 'keyup' },
 };
 
 const keyHandlers = {
     commandDown: () => {
-        isCmdDown = true;
+        Keys.cmdPressed = true;
     },
     commandUp: () => {
-        isCmdDown = false;
+        Keys.cmdPressed = false;
+    },
+    optionDown: () => {
+        Keys.optionPressed = true;
+    },
+    optionUp: () => {
+        Keys.optionPressed = false;
     },
 };
 
@@ -61,7 +68,7 @@ class Canvas extends PureComponent {
     onWheel(e) {
         const data = this.props.canvas;
 
-        if (isCmdDown) {
+        if (Keys.cmdPressed) {
             const wD = e.wheelDelta;
             const dY = e.deltaY;
             const delta = wD || dY * -1;

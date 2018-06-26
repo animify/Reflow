@@ -1,6 +1,6 @@
 export const pan = matrix => ({
     type: 'CANVAS::PAN',
-    payload: { matrix }
+    payload: { matrix },
 });
 
 export const zoom = (matrix, scale) => ({
@@ -8,7 +8,7 @@ export const zoom = (matrix, scale) => ({
     payload: {
         matrix,
         scale
-    }
+    },
 });
 
 export const setPresenting = payload => ({

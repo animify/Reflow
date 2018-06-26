@@ -1,6 +1,6 @@
 import produce from 'immer';
 
-const boards = produce((draft, action) => {
+const boards = produce((draft) => {
 
 }, {});
 

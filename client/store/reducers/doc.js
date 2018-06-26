@@ -14,8 +14,6 @@ const doc = produce((draft, action) => {
             break;
 
         case 'ENTITY::TOGGLE_SELECT':
-            console.log('toggling select');
-
             if (action.payload.replace) {
                 draft.selected = [action.payload.id];
             } else {
@@ -25,7 +23,7 @@ const doc = produce((draft, action) => {
                     draft.selected.push(action.payload.id);
                 }
 
-                if (!action.payload.select && indexSelected > -1) {
+                if (indexSelected > -1) {
                     draft.selected.splice(indexSelected, 1);
                 }
             }
@@ -41,7 +39,6 @@ const doc = produce((draft, action) => {
             break;
 
         case 'DOCUMENT::DUPLICATE_SELECTED':
-            console.log('duplicating');
             const newIds = draft.selected.map((entityId) => {
                 const shortId = cuid();
                 const newId = `${draft.entities[entityId].type}${shortId}`;

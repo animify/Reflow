@@ -8,9 +8,9 @@ import LeftPanel from '../containers/leftPanel/LeftPanel';
 const EditorPage = () => (
     <Fragment>
         <Toolbar />
-        {/* <LeftPanel /> */}
+        <LeftPanel />
         <Canvas />
-        <PropertiesPane />
+        {/* <PropertiesPane /> */}
     </Fragment>
 );
 

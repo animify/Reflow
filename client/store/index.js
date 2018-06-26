@@ -5,18 +5,17 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 import History from '../modules/History';
 import rootReducer from './reducers';
 import dcmt from '../parser';
-
-console.log(dcmt);
+import { rafScheduler } from '../utils/reduxMiddleware';
 
 const middleware = routerMiddleware(History);
 let enhancer = null;
 
 if (process.env.NODE_ENV !== 'production') {
     enhancer = composeWithDevTools(
-        applyMiddleware(middleware)
+        applyMiddleware(middleware, rafScheduler)
     );
 } else {
-    enhancer = applyMiddleware(middleware);
+    enhancer = applyMiddleware(middleware, rafScheduler);
 }
 
 if (process.env.NODE_ENV !== 'production') {
@@ -27,7 +26,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const store = createStore(
     rootReducer,
-    dcmt,
+    dcmt.initialState,
     enhancer
 );
 

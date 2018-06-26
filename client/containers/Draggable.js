@@ -1,6 +1,7 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { DraggableCore } from 'react-draggable';
 import store from '../store';
+import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'constants';
 
 const createDraggableData = (draggable, coreData, scale) => {
     const deltaX = Math.round(coreData.deltaX / scale);
@@ -17,7 +18,7 @@ const createDraggableData = (draggable, coreData, scale) => {
     };
 }
 
-export default class Draggable extends Component {
+export default class Draggable extends PureComponent {
     constructor(props) {
         super(props);
 
