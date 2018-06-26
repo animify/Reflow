@@ -4,9 +4,13 @@ import { connect } from 'react-redux';
 
 const makeMapStateToProps = (initialState, initialProps) => {
     const { entityId } = initialProps;
-    const mapStateToProps = state => ({
-        entity: state.doc.present.entities[entityId]
-    });
+    const mapStateToProps = (state) => {
+        const { entities } = state.doc.present;
+        const entity = entities[entityId];
+        return {
+            entity,
+        };
+    };
     return mapStateToProps;
 };
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Frame from './Frame';
@@ -9,14 +9,19 @@ const mapStateToProps = state => ({
     scale: state.canvas.scale
 });
 
-const Frames = ({ selectedEntities, hoveringEntity, scale }) => (
-    <g id="frames">
-        {hoveringEntity !== null && <Frame entityId={hoveringEntity} scale={scale} />}
-        {selectedEntities.map(entityId => (
-            <Frame key={`frame-${entityId}`} entityId={entityId} scale={scale} />
-        ))}
-    </g>
-);
+class Frames extends PureComponent {
+    render() {
+        const { selectedEntities, hoveringEntity, scale } = this.props;
+        return (
+            <g id="frames">
+                {hoveringEntity !== null && <Frame entityId={hoveringEntity} scale={scale} />}
+                {selectedEntities.map(entityId => (
+                    <Frame key={`frame-${entityId}`} entityId={entityId} scale={scale} />
+                ))}
+            </g>
+        );
+    }
+}
 
 Frames.defaultProps = {
     hoveringEntity: null,

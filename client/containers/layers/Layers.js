@@ -1,4 +1,4 @@
-import React, { Fragment, Component } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Layer from './Layer';
@@ -14,11 +14,7 @@ const mapDispatchToProps = dispatch => ({
     onMouseLeave: entityId => dispatch(toggleHoverEntity(entityId, false)),
     onMouseDown: entityId => dispatch(toggleSelectEntity(entityId, true, true)),
 });
-class Layers extends Component {
-    shouldComponentUpdate(nextProps) {
-        return JSON.stringify(nextProps.selectedEntities) !== JSON.stringify(this.props.selectedEntities);
-    }
-
+class Layers extends PureComponent {
     render() {
         const { entitiesOrder, selectedEntities, onMouseEnter, onMouseLeave, onMouseDown } = this.props;
         return (

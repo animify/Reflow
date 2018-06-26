@@ -6,25 +6,26 @@ const doc = produce((draft, action) => {
         case 'ENTITY::SET':
             console.log('Setting entities:', action.payload);
 
+            draft.hovering = null;
+            draft.selected.length = 0;
             draft.currentPage = action.payload.currentPage;
             draft.entitiesOrder = action.payload.entitiesOrder;
             draft.entities = action.payload.entities;
-            draft.selected = [];
-            draft.hovering = null;
             break;
 
         case 'ENTITY::TOGGLE_SELECT':
-            if (action.payload.replace) {
-                draft.selected = [action.payload.id];
-            } else {
-                const indexSelected = draft.selected.findIndex(s => s === action.payload.id);
+            const indexSelected = draft.selected.findIndex(s => s === action.payload.id);
 
+            if (action.payload.replace && indexSelected === -1) {
+                draft.selected.length = 0;
+                draft.selected.push(action.payload.id);
+            } else {
                 if (action.payload.select && indexSelected === -1) {
-                    draft.selected = [...draft.selected, action.payload.id];
+                    draft.selected.push(action.payload.id);
                 }
 
-                if (indexSelected > -1) {
-                    draft.selected = draft.selected.filter((e, i) => i !== indexSelected);
+                if (!action.payload.select && indexSelected > -1) {
+                    draft.selected.splice(indexSelected, 1);
                 }
             }
 
@@ -35,7 +36,7 @@ const doc = produce((draft, action) => {
             break;
 
         case 'DOCUMENT::DESELECT_ALL':
-            draft.selected = [];
+            draft.selected.length = 0;
             break;
 
         case 'DOCUMENT::DUPLICATE_SELECTED':

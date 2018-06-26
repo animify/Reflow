@@ -5,7 +5,7 @@ import parser from '../../parser';
 
 const makeMapStateToProps = (initialState, initialProps) => {
     const { boardId } = initialProps;
-    const mapStateToProps = (state) => {
+    const mapStateToProps = state => {
         const board = state.boards.all[boardId];
         return {
             board,
@@ -16,14 +16,14 @@ const makeMapStateToProps = (initialState, initialProps) => {
 
 class Board extends PureComponent {
     onClick = () => {
-        if (this.props.selected === null) {
-            return null;
+        if (this.props.selected) {
+            return false;
         }
         this.props.clickHandler(this.props.boardId, parser.sample.pages[this.props.boardId].entities)
     }
 
     render() {
-        const { board, selected, clickHandler } = this.props;
+        const { board, selected } = this.props;
 
         return (
             <Fragment>

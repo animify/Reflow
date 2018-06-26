@@ -70,7 +70,6 @@ const handlers = {
         followEvent();
     },
     onStart: () => {
-        console.log('started dragging')
     },
     onDrag: () => {
         handlers.isDragging = true;
@@ -90,10 +89,6 @@ const getEntityComponent = (type) => {
 };
 
 class Entity extends PureComponent {
-    // shouldComponentUpdate(nextProps) {
-    //     return nextProps.entityId != this.props.entityId;
-    // }
-
     container = ({ children, draggable }) => {
         const { entity, entityId, onMouseDown, isPresenting } = this.props;
 

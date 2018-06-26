@@ -5,7 +5,7 @@ import Layers from '../layers/Layers';
 const LeftPanel = () => (
     <aside id="left-panel">
         <Boards />
-        <Layers />
+        {/* <Layers /> */}
     </aside>
 );
 

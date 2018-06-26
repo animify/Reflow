@@ -16,7 +16,7 @@ const mapDispatchToProps = dispatch => ({
     deselectAll: (e) => {
         e.preventDefault();
         e.stopPropagation();
-        // dispatch(deselectAllEntities());
+        dispatch(deselectAllEntities());
     },
     zoom: (matrix, multiplier) => dispatch(zoom(matrix, multiplier)),
 });
@@ -40,7 +40,7 @@ class Canvas extends PureComponent {
     onWheel(e) {
         const data = this.props.canvas;
 
-        if (Keys.cmdPressed) {
+        if (Keys.optionPressed) {
             const wD = e.wheelDelta;
             const dY = e.deltaY;
             const delta = wD || dY * -1;
