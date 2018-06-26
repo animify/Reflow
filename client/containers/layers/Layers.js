@@ -1,14 +1,12 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Layer from './Layer';
 import { toggleHoverEntity, toggleSelectEntity } from '../../store/actions';
-import store from '../../store';
 
 const mapStateToProps = state => ({
     entitiesOrder: state.doc.present.entitiesOrder,
     selectedEntities: state.doc.present.selected,
-    hoveringEntity: state.doc.present.hovering,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -16,29 +14,32 @@ const mapDispatchToProps = dispatch => ({
     onMouseLeave: entityId => dispatch(toggleHoverEntity(entityId, false)),
     onMouseDown: entityId => dispatch(toggleSelectEntity(entityId, true, true)),
 });
+class Layers extends Component {
+    shouldComponentUpdate(nextProps) {
+        return JSON.stringify(nextProps.selectedEntities) !== JSON.stringify(this.props.selectedEntities);
+    }
 
-const Layers = ({ entitiesOrder, selectedEntities, hoveringEntity, onMouseEnter, onMouseLeave, onMouseDown }) => {
-    const entities = store.getState().doc.present.entities;
-    return (
-        <Fragment>
-            <h5 className="layer-heading">Layers</h5>
-            <div className="layers">
-                {entitiesOrder.map(entityId => (
-                    <Layer
-                        key={`layer-${entityId}`}
-                        entityId={entityId}
-                        selected={selectedEntities.includes(entityId)}
-                        hovering={hoveringEntity === entityId}
-                        text={entities[entityId].caption || entityId}
-                        mouseEnterHandler={onMouseEnter}
-                        mouseLeaveHandler={onMouseLeave}
-                        mouseDownHandler={onMouseDown}
-                    />
-                ))}
-            </div>
-        </Fragment>
-    );
-};
+    render() {
+        const { entitiesOrder, selectedEntities, onMouseEnter, onMouseLeave, onMouseDown } = this.props;
+        return (
+            <Fragment>
+                <h5 className="layer-heading">Layers</h5>
+                <div className="layers">
+                    {entitiesOrder.map(entityId => (
+                        <Layer
+                            key={`layer-${entityId}`}
+                            entityId={entityId}
+                            selected={selectedEntities.includes(entityId)}
+                            mouseEnterHandler={onMouseEnter}
+                            mouseLeaveHandler={onMouseLeave}
+                            mouseDownHandler={onMouseDown}
+                        />
+                    ))}
+                </div>
+            </Fragment>
+        );
+    }
+}
 
 Layers.defaultProps = {
     hoveringEntity: null,
@@ -46,11 +47,10 @@ Layers.defaultProps = {
 
 Layers.propTypes = {
     entitiesOrder: PropTypes.array.isRequired,
-    selectedEntities: PropTypes.array.isRequired,
-    hoveringEntity: PropTypes.string,
     onMouseEnter: PropTypes.func.isRequired,
     onMouseLeave: PropTypes.func.isRequired,
     onMouseDown: PropTypes.func.isRequired,
+    selectedEntities: PropTypes.array.isRequired,
 };
 
 export default connect(

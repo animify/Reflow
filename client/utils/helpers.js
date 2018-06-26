@@ -66,3 +66,28 @@ export const getBoundingbox = (entities) => {
     };
 };
 
+
+export const generateDiamondPath = (size) => {
+    const points = [
+        {
+            x: size.w / 2,
+            y: 0,
+        },
+        {
+            x: size.w,
+            y: size.h / 2,
+        },
+        {
+            x: size.w / 2,
+            y: size.h,
+        },
+        {
+            x: 0,
+            y: size.h / 2,
+        },
+    ];
+
+    const pointString = points.reduce((str, point) => (str += ` ${point.x},${point.y}`, str), '');
+
+    return `M${pointString} z`;
+}

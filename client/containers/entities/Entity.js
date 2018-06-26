@@ -5,8 +5,10 @@ import Draggable from '../Draggable';
 import { toggleHoverEntity, toggleSelectEntity, updateEntity } from '../../store/actions';
 import store from '../../store';
 import Screen from './Screen';
+import Shape from './Shape';
 import Image from './Image';
 import Link from './Link';
+import Keys from '../../utils/hotkeys';
 // import { checkVisible } from '../../utils/helpers';
 
 const entityMap = {
@@ -17,10 +19,17 @@ const entityMap = {
             draggable: true
         }
     },
+    shape: {
+        component: Shape,
+        options: {
+            resizable: true,
+            draggable: true
+        }
+    },
     image: {
         component: Image,
         options: {
-            resizable: false,
+            resizable: true,
             draggable: true
         }
     },
@@ -51,7 +60,7 @@ const makeMapStateToProps = (initialState, initialProps) => {
 const mapDispatchToProps = (dispatch, ownProps) => ({
     onMouseEnter: () => dispatch(toggleHoverEntity(ownProps.entityId, true)),
     onMouseLeave: () => dispatch(toggleHoverEntity(ownProps.entityId, false)),
-    onMouseDown: () => dispatch(toggleSelectEntity(ownProps.entityId, true, true)),
+    onMouseDown: () => dispatch(toggleSelectEntity(ownProps.entityId, true, !Keys.cmdPressed)),
 });
 
 const handlers = {
@@ -61,9 +70,10 @@ const handlers = {
         followEvent();
     },
     onStart: () => {
-        handlers.isDragging = true;
+        console.log('started dragging')
     },
     onDrag: () => {
+        handlers.isDragging = true;
     },
     onStop: (entityId, data) => {
         store.dispatch(updateEntity(entityId, { position: { x: data.x, y: data.y } }));
@@ -84,8 +94,27 @@ class Entity extends PureComponent {
     //     return nextProps.entityId != this.props.entityId;
     // }
 
+    container = ({ children, draggable }) => {
+        const { entity, entityId, onMouseDown, isPresenting } = this.props;
+
+        return (draggable ?
+            <Draggable
+                grid={null}
+                disabled={isPresenting || Boolean(entity.locked)}
+                position={entity.position}
+                onMouseDown={e => handlers.onMouseDown(e, onMouseDown)}
+                onStart={(e, i) => handlers.onStart(entityId, e, i)}
+                onDrag={(e, i) => handlers.onDrag(entityId, e, i)}
+                onStop={(e, data) => handlers.onStop(entityId, data)}
+                scale={1}
+            >
+                {children}
+            </Draggable> : children
+        )
+    };
+
     render() {
-        const { entity, entityId, onMouseEnter, onMouseLeave, onMouseDown, hovering, isPresenting } = this.props;
+        const { entity, onMouseEnter, onMouseLeave, hovering, isPresenting } = this.props;
         const entityOptions = getEntityComponent(entity.type);
         const style = {
             opacity: entity.opacity,
@@ -97,41 +126,20 @@ class Entity extends PureComponent {
             return null;
         }
 
+        const Container = this.container;
         const EntityComponent = entityOptions.component;
 
-        if (entityOptions.options.draggable) {
-            return (
-                <Draggable
-                    grid={null}
-                    disabled={isPresenting || Boolean(entity.locked)}
-                    position={entity.position}
-                    onMouseDown={e => handlers.onMouseDown(e, onMouseDown)}
-                    onStart={(e, i) => handlers.onStart(entityId, e, i)}
-                    onDrag={(e, i) => handlers.onDrag(entityId, e, i)}
-                    onStop={(e, data) => handlers.onStop(entityId, data)}
-                    scale={1}
-                >
-                    <g
-                        onMouseEnter={!handlers.isDragging ? onMouseEnter : undefined}
-                        onMouseLeave={!handlers.isDragging ? onMouseLeave : undefined}
-                        style={style}
-                    >
-                        <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
-                        <EntityComponent entity={entity} hovering={hovering} isPresenting={isPresenting} />
-                    </g>
-                </Draggable>
-            );
-        }
-
         return (
-            <g
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
-                style={style}
-            >
-                <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
-                <EntityComponent entity={entity} isPresenting={isPresenting} />
-            </g>
+            <Container draggable={entityOptions.options.draggable}>
+                <g
+                    onMouseEnter={onMouseEnter}
+                    onMouseLeave={onMouseLeave}
+                    style={style}
+                >
+                    <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
+                    <EntityComponent entity={entity} isPresenting={isPresenting} hovering={hovering} />
+                </g>
+            </Container>
         );
     }
 }

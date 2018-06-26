@@ -1,53 +1,25 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { HotKeys } from 'react-hotkeys';
-import { ActionCreators } from 'redux-undo';
 import PropTypes from 'prop-types';
 import Entities from './Entities';
 import Frames from './frames/Frames';
-import { pan, zoom, deselectAllEntities, duplicateSelected } from '../store/actions';
+import { pan, zoom, deselectAllEntities } from '../store/actions';
 import { scaleWheelDelta, clientPoint } from '../utils/helpers';
 import Keys from '../utils/hotkeys';
-
-const keyMap = {
-    duplicate: 'mod+d',
-    undo: 'mod+z',
-    redo: 'mod+shift+z',
-    mod: 'mod',
-    commandDown: { sequence: 'mod', action: 'keydown' },
-    commandUp: { sequence: 'mod', action: 'keyup' },
-    optionDown: { sequence: 'alt', action: 'keydown' },
-    optionUp: { sequence: 'alt', action: 'keyup' },
-};
-
-const keyHandlers = {
-    commandDown: () => {
-        Keys.cmdPressed = true;
-    },
-    commandUp: () => {
-        Keys.cmdPressed = false;
-    },
-    optionDown: () => {
-        Keys.optionPressed = true;
-    },
-    optionUp: () => {
-        Keys.optionPressed = false;
-    },
-};
 
 const mapStateToProps = state => ({
     canvas: state.canvas,
 });
 
 const mapDispatchToProps = dispatch => ({
-    onUndo: () => dispatch(ActionCreators.undo()),
-    onRedo: () => dispatch(ActionCreators.redo()),
-    onDuplicate: () => dispatch(duplicateSelected()),
     pan: (x, y) => dispatch(pan(x, y)),
-    deselectAll: () => dispatch(deselectAllEntities()),
+    deselectAll: (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        // dispatch(deselectAllEntities());
+    },
     zoom: (matrix, multiplier) => dispatch(zoom(matrix, multiplier)),
 });
-
 class Canvas extends PureComponent {
     constructor(props) {
         super(props);
@@ -108,42 +80,29 @@ class Canvas extends PureComponent {
     }
 
     render() {
-        const { onUndo, onRedo, canvas, deselectAll, onDuplicate } = this.props;
-        const matrix = canvas.matrix;
-        const handlers = {
-            ...keyHandlers,
-            undo: onUndo,
-            redo: onRedo,
-            duplicate: (event) => {
-                event.preventDefault();
-                onDuplicate();
-            },
-        };
+        const { canvas: { matrix }, deselectAll } = this.props;
 
         return (
-            <HotKeys className="renderer" keyMap={keyMap} handlers={handlers} style={{ backgroundColor: '#1b1c1c' }} focused>
+            <Fragment>
                 <svg id="renderer" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink" ref={(ref) => { this.svgRenderer = ref; }} onMouseDown={deselectAll}>
                     <g transform={`matrix(${matrix.a} ${matrix.b} ${matrix.c} ${matrix.d} ${matrix.e} ${matrix.f})`}>
                         <Entities />
                     </g>
                 </svg>
-                <svg id="renderer-overlay" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink">
+                <svg id="renderer-overlay" className="ignore-events" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink">
                     <g transform={`matrix(${matrix.a} ${matrix.b} ${matrix.c} ${matrix.d} ${matrix.e} ${matrix.f})`}>
                         <Frames />
                     </g>
                 </svg>
-            </HotKeys>
+            </Fragment>
         );
     }
 }
 
 Canvas.propTypes = {
     canvas: PropTypes.object.isRequired,
-    onUndo: PropTypes.func.isRequired,
-    onRedo: PropTypes.func.isRequired,
     pan: PropTypes.func.isRequired,
     zoom: PropTypes.func.isRequired,
-    onDuplicate: PropTypes.func.isRequired,
     deselectAll: PropTypes.func.isRequired,
 };
 

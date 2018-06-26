@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Board from './Board';
@@ -12,28 +12,33 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    changeBoard: (id, currentPage, entities) => {
-        parser.sample.pages[currentPage].entities = store.getState().doc.present.entities;
+    changeBoard: (id, entities) => {
+        const { entities: currentEntities, currentPage } = store.getState().doc.present;
+        parser.sample.pages[currentPage].entities = currentEntities;
         dispatch(setEntities(id, entities));
     }
 });
 
-const Boards = ({ boardList, changeBoard, currentPage }) => {
-    const handleClick = (id, entities) => {
-        changeBoard(id, currentPage, entities);
-    };
+class Boards extends PureComponent {
+    handleClick = (id, entities) => {
+        this.props.changeBoard(id, entities);
+    }
 
-    return (
-        <Fragment>
-            <h5 className="layer-heading">Boards</h5>
-            <div className="layers">
-                {boardList.map(id => (
-                    <Board key={`board-${id}`} boardId={id} selected={currentPage === id} clickHandler={handleClick} />
-                ))}
-            </div>
-        </Fragment>
-    );
-};
+    render() {
+        const { boardList, currentPage } = this.props;
+
+        return (
+            <Fragment>
+                <h5 className="layer-heading">Boards</h5>
+                <div className="layers">
+                    {boardList.map(id => (
+                        <Board key={`board-${id}`} boardId={id} selected={currentPage === id} clickHandler={this.handleClick} />
+                    ))}
+                </div>
+            </Fragment>
+        );
+    }
+}
 
 Boards.propTypes = {
     boardList: PropTypes.array.isRequired,

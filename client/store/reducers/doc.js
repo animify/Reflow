@@ -20,11 +20,11 @@ const doc = produce((draft, action) => {
                 const indexSelected = draft.selected.findIndex(s => s === action.payload.id);
 
                 if (action.payload.select && indexSelected === -1) {
-                    draft.selected.push(action.payload.id);
+                    draft.selected = [...draft.selected, action.payload.id];
                 }
 
                 if (indexSelected > -1) {
-                    draft.selected.splice(indexSelected, 1);
+                    draft.selected = draft.selected.filter((e, i) => i !== indexSelected);
                 }
             }
 
