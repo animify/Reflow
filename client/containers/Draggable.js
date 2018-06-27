@@ -30,7 +30,19 @@ export default class Draggable extends PureComponent {
             x: props.position.x,
             y: props.position.y,
         };
+
+        this.x = props.position.x;
+        this.y = props.position.y;
+        this.intvl = null;
     }
+
+    // componentDidMount() {
+    //     this.startMove();
+    // }
+
+    // componentWillUnmount() {
+    //     window.cancelAnimationFrame(this.intvl);
+    // }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps !== this.props && (nextProps.position.x !== this.props.position.x ||
@@ -38,6 +50,18 @@ export default class Draggable extends PureComponent {
             this.setState({ x: nextProps.position.x, y: nextProps.position.y });
         }
     }
+
+    // posMove = () => {
+    //     this.setState((prevState) => ({
+    //         x: prevState.x + 15
+    //     }));
+
+    //     this.startMove();
+    // }
+
+    // startMove = () => {
+    //     this.intvl = window.requestAnimationFrame(this.posMove);
+    // }
 
     onDragStart = (e, coreData) => {
         const { canvas } = store.getState();
@@ -77,9 +101,9 @@ export default class Draggable extends PureComponent {
 
         return (
             <DraggableCore {...this.props} onStart={this.onDragStart} onDrag={this.onDrag} onStop={this.onDragStop}>
-                {React.cloneElement(this.props.children, {
-                    transform
-                })}
+                <g transform={transform}>
+                    {this.props.children}
+                </g>
             </DraggableCore>
         );
     }

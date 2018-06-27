@@ -8,14 +8,16 @@ import Canvas from '../containers/Canvas';
 import PropertiesPane from '../containers/properties/PropertiesPane';
 import Toolbar from '../containers/toolbar/Toolbar';
 import LeftPanel from '../containers/leftPanel/LeftPanel';
-import { duplicateSelected } from '../store/actions';
+import { duplicateSelected, selectAllEntities } from '../store/actions';
 import Keys from '../utils/hotkeys';
 
 const keyMap = {
+    selectAll: 'mod+a',
     duplicate: 'mod+d',
     undo: 'mod+z',
     redo: 'mod+shift+z',
     mod: 'mod',
+    move: 'm',
     commandDown: { sequence: 'mod', action: 'keydown' },
     commandUp: { sequence: 'mod', action: 'keyup' },
     optionDown: { sequence: 'alt', action: 'keydown' },
@@ -41,11 +43,13 @@ const mapDispatchToProps = dispatch => ({
     onUndo: () => dispatch(ActionCreators.undo()),
     onRedo: () => dispatch(ActionCreators.redo()),
     onDuplicate: () => dispatch(duplicateSelected()),
+    onSelectAll: () => dispatch(selectAllEntities()),
 });
 
-const Document = ({ onUndo, onRedo, onDuplicate }) => {
+const Document = ({ onSelectAll, onUndo, onRedo, onDuplicate }) => {
     const handlers = {
         ...keyHandlers,
+        selectAll: onSelectAll,
         undo: onUndo,
         redo: onRedo,
         duplicate: (event) => {
@@ -53,7 +57,6 @@ const Document = ({ onUndo, onRedo, onDuplicate }) => {
             onDuplicate();
         },
     };
-
     return (
         <HotKeys className="renderer" keyMap={keyMap} handlers={handlers} style={{ backgroundColor: '#1b1c1c' }} focused>
             <Toolbar />
@@ -68,6 +71,7 @@ Document.propTypes = {
     onUndo: PropTypes.func.isRequired,
     onRedo: PropTypes.func.isRequired,
     onDuplicate: PropTypes.func.isRequired,
+    onSelectAll: PropTypes.func.isRequired,
 };
 
 export default connect(

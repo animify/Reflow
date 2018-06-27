@@ -30,6 +30,10 @@ export const deselectAllEntities = () => ({
     type: 'DOCUMENT::DESELECT_ALL'
 });
 
+export const selectAllEntities = () => ({
+    type: 'DOCUMENT::SELECT_ALL'
+});
+
 export const duplicateSelected = () => ({
     type: 'DOCUMENT::DUPLICATE_SELECTED'
 });
@@ -40,6 +44,6 @@ export const setEntities = (currentPage, entities) => ({
         currentPage,
         entities,
         entitiesOrder: Object.keys(entities)
-    }
+    },
 });
 

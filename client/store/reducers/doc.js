@@ -35,6 +35,11 @@ const doc = produce((draft, action) => {
             draft.hovering = action.payload.hover ? action.payload.id : null;
             break;
 
+        case 'DOCUMENT::SELECT_ALL':
+            draft.selected.length = 0;
+            draft.selected = draft.selected.concat(draft.entitiesOrder);
+            break;
+
         case 'DOCUMENT::DESELECT_ALL':
             draft.selected.length = 0;
             break;
