@@ -14,18 +14,13 @@ const mapDispatchToProps = dispatch => ({
     onMouseLeave: entityId => dispatch(toggleHoverEntity(entityId, false)),
     onMouseDown: entityId => dispatch(toggleSelectEntity(entityId, true, true)),
 });
+
 class Layers extends PureComponent {
     render() {
         const { entitiesOrder, selectedEntities, onMouseEnter, onMouseLeave, onMouseDown } = this.props;
         return (
             <Fragment>
-                <h5 className="layer-heading">Stats</h5>
-                <div className="layers">
-                    <div className="layer">
-                        Total entities: <strong>{entitiesOrder.length}</strong>
-                    </div>
-                </div>
-                {/* <h5 className="layer-heading">Layers</h5>
+                <h5 className="layer-heading">Layers</h5>
                 <div className="layers">
                     {entitiesOrder.map(entityId => (
                         <Layer
@@ -37,7 +32,7 @@ class Layers extends PureComponent {
                             mouseDownHandler={onMouseDown}
                         />
                     ))}
-                </div> */}
+                </div>
             </Fragment>
         );
     }

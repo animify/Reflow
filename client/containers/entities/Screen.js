@@ -1,8 +1,8 @@
-import React, { Fragment, PureComponent } from 'react';
+import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 import produce from 'immer';
 
-export default class Screen extends PureComponent {
+export default class Screen extends Component {
     constructor() {
         super();
 
@@ -13,6 +13,10 @@ export default class Screen extends PureComponent {
         this.setState({
             innerElements: this.props.entity.innerElements
         });
+    }
+
+    shouldComponentUpdate(nextProps) {
+        return this.props.entity.id !== nextProps.entity.id;
     }
 
     hoverInnerElement(id, payload) {
@@ -27,7 +31,7 @@ export default class Screen extends PureComponent {
 
         return (
             <Fragment>
-                <image width={entity.size.w} height={entity.size.h} xlinkHref={entity.source.id} />
+                <image xlinkHref={entity.source.id} />
                 {(!isPresenting && hovering) && innerElements.map(ie => (
                     <rect
                         key={ie.id}

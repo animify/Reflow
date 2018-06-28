@@ -1,12 +1,12 @@
-import React, { Fragment, PureComponent } from 'react';
+import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import parser from '../../parser';
 
 const makeMapStateToProps = (initialState, initialProps) => {
-    const { boardId } = initialProps;
-    const mapStateToProps = state => {
-        const board = state.boards.all[boardId];
+    const boardId = initialProps.boardId;
+    const board = initialState.boards.all[boardId];
+    const mapStateToProps = () => {
         return {
             board,
         };
@@ -14,7 +14,11 @@ const makeMapStateToProps = (initialState, initialProps) => {
     return mapStateToProps;
 };
 
-class Board extends PureComponent {
+class Board extends Component {
+    shouldComponentUpdate(nextProps) {
+        return this.props.boardId !== nextProps.boardId || this.props.selected !== nextProps.selected
+    }
+
     onClick = () => {
         if (this.props.selected) {
             return false;

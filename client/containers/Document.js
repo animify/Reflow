@@ -43,7 +43,7 @@ const mapDispatchToProps = dispatch => ({
     onUndo: () => dispatch(ActionCreators.undo()),
     onRedo: () => dispatch(ActionCreators.redo()),
     onDuplicate: () => dispatch(duplicateSelected()),
-    onSelectAll: () => dispatch(selectAllEntities()),
+    onSelectAll: () => dispatch(selectAllEntities())
 });
 
 const Document = ({ onSelectAll, onUndo, onRedo, onDuplicate }) => {

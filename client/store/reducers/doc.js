@@ -4,13 +4,12 @@ import cuid from 'cuid';
 const doc = produce((draft, action) => {
     switch (action.type) {
         case 'ENTITY::SET':
-            console.log('Setting entities:', action.payload);
-
             draft.hovering = null;
             draft.selected.length = 0;
             draft.currentPage = action.payload.currentPage;
-            draft.entitiesOrder = action.payload.entitiesOrder;
             draft.entities = action.payload.entities;
+            draft.entitiesOrder.length = 0;
+            draft.entitiesOrder = Object.keys(action.payload.entities);
             break;
 
         case 'ENTITY::TOGGLE_SELECT':
@@ -52,8 +51,8 @@ const doc = produce((draft, action) => {
                     ...draft.entities[entityId],
                     id: shortId,
                     position: {
-                        x: draft.entities[entityId].position.x + 50,
-                        y: draft.entities[entityId].position.y + 50,
+                        x: draft.entities[entityId].position.x + 75,
+                        y: draft.entities[entityId].position.y + 75,
                     }
                 };
 
@@ -61,7 +60,8 @@ const doc = produce((draft, action) => {
             });
 
             draft.hovering = null;
-            draft.selected = newIds;
+            draft.selected.length = 0;
+            draft.selected = draft.selected.concat(newIds);
             draft.entitiesOrder = [...draft.entitiesOrder, ...newIds];
             break;
 

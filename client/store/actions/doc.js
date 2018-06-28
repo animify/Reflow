@@ -42,8 +42,7 @@ export const setEntities = (currentPage, entities) => ({
     type: 'ENTITY::SET',
     payload: {
         currentPage,
-        entities,
-        entitiesOrder: Object.keys(entities)
+        entities
     },
 });
 

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { DraggableCore } from 'react-draggable';
 import store from '../store';
 import { SSL_OP_NETSCAPE_REUSE_CIPHER_CHANGE_BUG } from 'constants';
@@ -18,7 +18,7 @@ const createDraggableData = (draggable, coreData, scale) => {
     };
 }
 
-export default class Draggable extends PureComponent {
+export default class Draggable extends Component {
     constructor(props) {
         super(props);
 
@@ -49,6 +49,10 @@ export default class Draggable extends PureComponent {
             nextProps.position.y !== this.props.position.y)) {
             this.setState({ x: nextProps.position.x, y: nextProps.position.y });
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.state.x !== nextState.x || this.state.y !== nextState.y
     }
 
     // posMove = () => {

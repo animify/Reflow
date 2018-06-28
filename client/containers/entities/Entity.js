@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Draggable from '../Draggable';
@@ -46,11 +46,9 @@ const entityMap = {
 const makeMapStateToProps = (initialState, initialProps) => {
     const { entityId } = initialProps;
     const mapStateToProps = (state) => {
-        const { entities, hovering } = state.doc.present;
-        const entity = entities[entityId];
         return {
-            entity,
-            hovering: hovering === entityId,
+            entity: state.doc.present.entities[entityId],
+            hovering: state.doc.present.hovering === entityId,
             isPresenting: state.canvas.presenting
         };
     };
@@ -63,23 +61,6 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     onMouseDown: () => dispatch(toggleSelectEntity(ownProps.entityId, true, !Keys.cmdPressed)),
 });
 
-const handlers = {
-    isDragging: false,
-    onMouseDown: (e, followEvent) => {
-        e.stopPropagation();
-        followEvent();
-    },
-    onStart: () => {
-    },
-    onDrag: () => {
-        handlers.isDragging = true;
-    },
-    onStop: (entityId, data) => {
-        store.dispatch(updateEntity(entityId, { position: { x: data.x, y: data.y } }));
-        handlers.isDragging = false;
-    }
-};
-
 const getEntityComponent = (type) => {
     if (entityMap[type]) {
         return entityMap[type];
@@ -88,9 +69,30 @@ const getEntityComponent = (type) => {
     return null;
 };
 
-class Entity extends PureComponent {
+class Entity extends Component {
+    shouldComponentUpdate(nextProps) {
+        return this.props.entity.position.x !== nextProps.entity.position.x || this.props.entity.position.y !== nextProps.entity.position.y
+    }
+
+    handlers = {
+        isDragging: false,
+        onMouseDown: (e) => {
+            e.stopPropagation();
+            this.props.onMouseDown();
+        },
+        onStart: () => {
+            this.handlers.isDragging = true;
+        },
+        onDrag: () => {
+        },
+        onStop: (e, data) => {
+            this.handlers.isDragging = false;
+            store.dispatch(updateEntity(this.props.entityId, { position: { x: data.x, y: data.y } }));
+        }
+    };
+
     container = ({ children, draggable }) => {
-        const { entity, entityId, onMouseDown, onMouseEnter, onMouseLeave, isPresenting } = this.props;
+        const { entity, onMouseEnter, onMouseLeave, isPresenting } = this.props;
 
         return (draggable ?
             <Draggable
@@ -99,10 +101,10 @@ class Entity extends PureComponent {
                 position={entity.position}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
-                onMouseDown={e => handlers.onMouseDown(e, onMouseDown)}
-                onStart={(e, i) => handlers.onStart(entityId, e, i)}
-                onDrag={(e, i) => handlers.onDrag(entityId, e, i)}
-                onStop={(e, data) => handlers.onStop(entityId, data)}
+                onMouseDown={this.handlers.onMouseDown}
+                onStart={this.handlers.onStart}
+                onDrag={this.handlers.onDrag}
+                onStop={this.handlers.onStop}
                 scale={1}
             >
                 {children}
@@ -116,11 +118,6 @@ class Entity extends PureComponent {
     render() {
         const { entity, hovering, isPresenting } = this.props;
         const entityOptions = getEntityComponent(entity.type);
-        // const style = {
-        //     opacity: entity.opacity,
-        //     width: entity.size.w,
-        //     height: entity.size.h,
-        // };
 
         if (entityOptions === null) {
             return null;
