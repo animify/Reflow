@@ -1,80 +1,78 @@
 import produce from 'immer';
 import cuid from 'cuid';
+import parser from '../../parser';
 
-const doc = produce((draft, action) => {
+const doc = (state, action) => {
     switch (action.type) {
-        case 'ENTITY::SET':
-            draft.hovering = null;
-            draft.selected.length = 0;
-            draft.currentPage = action.payload.currentPage;
-            draft.entities = action.payload.entities;
-            draft.entitiesOrder.length = 0;
-            draft.entitiesOrder = Object.keys(action.payload.entities);
-            break;
+        // case 'ENTITY::SET':
+        //     draft.hovering = null;
+        //     draft.selected.length = 0;
+        //     draft.currentPage = action.payload.currentPage;
+        //     draft.entities = action.payload.entities;
+        //     draft.entitiesOrder.length = 0;
+        //     draft.entitiesOrder = Object.keys(action.payload.entities);
+        //     break;
 
-        case 'ENTITY::TOGGLE_SELECT':
-            const indexSelected = draft.selected.findIndex(s => s === action.payload.id);
+        // case 'ENTITY::TOGGLE_SELECT':
+        //     const indexSelected = draft.selected.findIndex(s => s === action.payload.id);
 
-            if (action.payload.replace && indexSelected === -1) {
-                draft.selected.length = 0;
-                draft.selected.push(action.payload.id);
-            } else {
-                if (action.payload.select && indexSelected === -1) {
-                    draft.selected.push(action.payload.id);
-                }
+        //     if (action.payload.replace && indexSelected === -1) {
+        //         draft.selected.length = 0;
+        //         draft.selected.push(action.payload.id);
+        //     } else {
+        //         if (action.payload.select && indexSelected === -1) {
+        //             draft.selected.push(action.payload.id);
+        //         }
 
-                if (!action.payload.select && indexSelected > -1) {
-                    draft.selected.splice(indexSelected, 1);
-                }
-            }
+        //         if (!action.payload.select && indexSelected > -1) {
+        //             draft.selected.splice(indexSelected, 1);
+        //         }
+        //     }
 
-            break;
-
-        case 'ENTITY::TOGGLE_HOVER':
-            draft.hovering = action.payload.hover ? action.payload.id : null;
-            break;
+        //     break;
 
         case 'DOCUMENT::SELECT_ALL':
-            draft.selected.length = 0;
-            draft.selected = draft.selected.concat(draft.entitiesOrder);
+            state.selected.length = 0;
+            state.selected = state.selected.concat(state.entitiesOrder);
             break;
 
-        case 'DOCUMENT::DESELECT_ALL':
-            draft.selected.length = 0;
-            break;
+        // case 'DOCUMENT::DESELECT_ALL':
+        //     draft.selected.length = 0;
+        //     break;
 
-        case 'DOCUMENT::DUPLICATE_SELECTED':
-            const newIds = draft.selected.map((entityId) => {
-                const shortId = cuid();
-                const newId = `${draft.entities[entityId].type}${shortId}`;
-                draft.entities[newId] = {
-                    ...draft.entities[entityId],
-                    id: shortId,
-                    position: {
-                        x: draft.entities[entityId].position.x + 75,
-                        y: draft.entities[entityId].position.y + 75,
-                    }
-                };
+        // case 'DOCUMENT::DUPLICATE_SELECTED':
+        //     const selIds = [...draft.selected];
+        //     draft.selected.length = 0;
+        //     selIds.forEach((entityId, i) => {
+        //         const en = draft.entities[entityId];
+        //         const shortId = `${en.id}${i}`;
+        //         const newId = `${en.type}${shortId}`;
+        //         draft.entities[newId] = {
+        //             ...en,
+        //             id: shortId,
+        //             position: {
+        //                 x: en.position.x + 75,
+        //                 y: en.position.y + 75,
+        //             }
+        //         };
+        //         draft.selected.push(newId);
+        //         draft.entitiesOrder.push(newId);
+        //     });
+        //     break;
 
-                return newId;
-            });
+        // case 'ENTITY::UPDATE':
+        //     // console.log('Updating with payload:', action.payload);
 
-            draft.hovering = null;
-            draft.selected.length = 0;
-            draft.selected = draft.selected.concat(newIds);
-            draft.entitiesOrder = [...draft.entitiesOrder, ...newIds];
-            break;
+        //     draft.entities[action.id] = {
+        //         ...draft.entities[action.id],
+        //         ...action.payload
+        //     };
+        //     break;
 
-        case 'ENTITY::UPDATE':
-            // console.log('Updating with payload:', action.payload);
-
-            draft.entities[action.id] = {
-                ...draft.entities[action.id],
-                ...action.payload
-            };
-            break;
+        default:
+            return state;
     }
-});
+};
 
 export default doc;
 

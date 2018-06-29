@@ -1,25 +1,20 @@
-import produce from 'immer';
+import { Map, fromJS } from 'immutable';
 
-const canvas = produce((draft, action) => {
+const canvas = (state = Map({ scale: 1, matrix: fromJS(document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGMatrix()) }), action) => {
     switch (action.type) {
         case 'CANVAS::PAN':
-            draft.matrix = action.payload.matrix;
+            state.matrix = action.payload.matrix;
             break;
         case 'CANVAS::ZOOM':
-            draft.scale = action.payload.scale;
-            draft.matrix = action.payload.matrix;
+            state.scale = action.payload.scale;
+            state.matrix = action.payload.matrix;
             break;
         case 'CANVAS::SET_PRESENTING':
-            draft.presenting = action.payload;
+            state.presenting = action.payload;
             break;
+        default:
+            return state;
     }
-}, {
-        matrix: document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGMatrix(),
-        innerHeight: window.innerHeight,
-        innerWidth: window.innerWidth,
-        scale: 1,
-        presenting: false,
-        title: 'Untitled'
-    });
+};
 
 export default canvas;

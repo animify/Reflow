@@ -5,8 +5,6 @@ import { ActionCreators } from 'redux-undo';
 import { HotKeys } from 'react-hotkeys';
 import PropTypes from 'prop-types';
 import Canvas from '../containers/Canvas';
-import PropertiesPane from '../containers/properties/PropertiesPane';
-import Toolbar from '../containers/toolbar/Toolbar';
 import LeftPanel from '../containers/leftPanel/LeftPanel';
 import { duplicateSelected, selectAllEntities } from '../store/actions';
 import Keys from '../utils/hotkeys';
@@ -59,10 +57,8 @@ const Document = ({ onSelectAll, onUndo, onRedo, onDuplicate }) => {
     };
     return (
         <HotKeys className="renderer" keyMap={keyMap} handlers={handlers} style={{ backgroundColor: '#1b1c1c' }} focused>
-            <Toolbar />
-            <LeftPanel />
+            {/* <LeftPanel /> */}
             <Canvas />
-            {/* <PropertiesPane /> */}
         </HotKeys>
     );
 };

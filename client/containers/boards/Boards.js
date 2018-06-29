@@ -7,8 +7,8 @@ import store from '../../store';
 import parser from '../../parser';
 
 const mapStateToProps = state => ({
-    boardList: state.boards.byId,
-    currentPage: state.doc.present.currentPage,
+    boardList: state.getIn(['boards', 'byId']),
+    currentPage: state.get('doc').present.get('currentPage'),
 });
 
 const mapDispatchToProps = dispatch => ({

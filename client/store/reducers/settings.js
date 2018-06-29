@@ -1,10 +1,5 @@
-import produce from 'immer';
+import { Map } from 'immutable';
 
-const settings = produce((draft, action) => {
-    switch (action.type) {
-        case 'SETTINGS::GRID_TOGGLE':
-            draft.grid = [25, 25];
-    }
-}, {});
+const settings = (state = Map({}), action) => state;
 
 export default settings;

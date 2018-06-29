@@ -11,12 +11,12 @@ export default class Screen extends Component {
 
     componentWillMount() {
         this.setState({
-            innerElements: this.props.entity.innerElements
+            innerElements: this.props.entity.get('innerElements')
         });
     }
 
     shouldComponentUpdate(nextProps) {
-        return this.props.entity.id !== nextProps.entity.id;
+        return this.props.entity.get('id') !== nextProps.entity.get('id');
     }
 
     hoverInnerElement(id, payload) {
@@ -31,7 +31,7 @@ export default class Screen extends Component {
 
         return (
             <Fragment>
-                <image xlinkHref={entity.source.id} />
+                {/* <image xlinkHref={entity.source.id} /> */}
                 {(!isPresenting && hovering) && innerElements.map(ie => (
                     <rect
                         key={ie.id}

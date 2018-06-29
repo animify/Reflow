@@ -4,19 +4,20 @@ import PropTypes from 'prop-types';
 import Entity from './entities/Entity';
 
 const mapStateToProps = state => ({
-    entitiesOrder: state.doc.present.entitiesOrder
+    entitiesOrder: state.getIn(['doc']).present.get('entitiesOr\der')
 });
 
 const Entities = ({ entitiesOrder }) => (
     <Fragment>
-        {entitiesOrder.map(entityId => (
+        {console.log(entitiesOrder.valueSeq())}
+        {entitiesOrder.valueSeq().map(entityId => (
             <Entity key={`entity-${entityId}`} entityId={entityId} />
         ))}
     </Fragment >
 );
 
 Entities.propTypes = {
-    entitiesOrder: PropTypes.array.isRequired,
+    entitiesOrder: PropTypes.object.isRequired,
 };
 
 export default connect(

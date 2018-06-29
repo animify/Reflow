@@ -1,21 +1,19 @@
 import React from 'react';
+import { get, Map } from 'immutable';
 import { createStore, applyMiddleware } from 'redux';
-import { routerMiddleware } from 'react-router-redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
-import History from '../modules/History';
 import rootReducer from './reducers';
 import dcmt from '../parser';
 import { rafScheduler } from '../utils/reduxMiddleware';
 
-const middleware = routerMiddleware(History);
 let enhancer = null;
 
 if (process.env.NODE_ENV !== 'production') {
     enhancer = composeWithDevTools(
-        applyMiddleware(middleware, rafScheduler)
+        applyMiddleware(rafScheduler)
     );
 } else {
-    enhancer = applyMiddleware(middleware, rafScheduler);
+    enhancer = applyMiddleware(rafScheduler);
 }
 
 if (process.env.NODE_ENV !== 'production') {
@@ -23,10 +21,10 @@ if (process.env.NODE_ENV !== 'production') {
     whyDidYouUpdate(React);
 }
 
-
+console.log(dcmt.get('initialState'));
 const store = createStore(
     rootReducer,
-    dcmt.initialState,
+    dcmt.get('initialState'),
     enhancer
 );
 

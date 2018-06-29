@@ -8,7 +8,8 @@ import { scaleWheelDelta, clientPoint } from '../utils/helpers';
 import Keys from '../utils/hotkeys';
 
 const mapStateToProps = state => ({
-    canvas: state.canvas,
+    scale: state.getIn(['canvas', 'scale']),
+    matrix: state.getIn(['canvas', 'matrix']),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -67,20 +68,20 @@ class Canvas extends PureComponent {
 
     pan(x, y) {
         window.requestAnimationFrame(() => {
-            const newMatrix = this.props.canvas.matrix.translate(x, y);
+            const newMatrix = this.props.matrix.translate(x, y);
             this.props.pan(newMatrix);
         });
     }
 
     zoom(point, multiplier) {
         window.requestAnimationFrame(() => {
-            const newMatrix = this.props.canvas.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
-            this.props.zoom(newMatrix, this.props.canvas.scale * multiplier);
+            const newMatrix = this.props.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
+            this.props.zoom(newMatrix, this.props.scale * multiplier);
         });
     }
 
     render() {
-        const { canvas: { matrix }, deselectAll } = this.props;
+        const { matrix, deselectAll } = this.props;
 
         return (
             <Fragment>
@@ -89,18 +90,19 @@ class Canvas extends PureComponent {
                         <Entities />
                     </g>
                 </svg>
-                <svg id="renderer-overlay" className="ignore-events" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink">
+                {/* <svg id="renderer-overlay" className="ignore-events" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" xmlnsXlink="http://www.w3.org/1999/xlink">
                     <g transform={`matrix(${matrix.a} ${matrix.b} ${matrix.c} ${matrix.d} ${matrix.e} ${matrix.f})`}>
                         <Frames />
                     </g>
-                </svg>
+                </svg> */}
             </Fragment>
         );
     }
 }
 
 Canvas.propTypes = {
-    canvas: PropTypes.object.isRequired,
+    matrix: PropTypes.object.isRequired,
+    scale: PropTypes.number.isRequired,
     pan: PropTypes.func.isRequired,
     zoom: PropTypes.func.isRequired,
     deselectAll: PropTypes.func.isRequired,
