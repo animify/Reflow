@@ -14,8 +14,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     changeBoard: (id, entities) => {
         const { entities: currentEntities, currentPage } = store.getState().doc.present;
-        parser.sample.pages[currentPage].entities = currentEntities;
         dispatch(setEntities(id, entities));
+        parser.sample.pages[currentPage].entities = currentEntities;
     }
 });
 

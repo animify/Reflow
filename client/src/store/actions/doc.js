@@ -1,3 +1,6 @@
+import store from "..";
+import parser from "../../../parser";
+
 export const updateEntity = (id, payload) => ({
     type: 'ENTITY::UPDATE',
     id,
@@ -38,11 +41,29 @@ export const duplicateSelected = () => ({
     type: 'DOCUMENT::DUPLICATE_SELECTED'
 });
 
-export const setEntities = (currentPage, entities) => ({
+export const setEntities = (boardId, entities) => ({
     type: 'ENTITY::SET',
     payload: {
-        currentPage,
+        boardId,
         entities
     },
 });
+
+export const nextBoard = () => {
+    const boards = store.getState().boards;
+    const { entities: currentEntities, currentPage } = store.getState().doc.present;
+    const nextIndex = boards.byId.findIndex(b => b === currentPage) + 1;
+    const nextBoardId = nextIndex >= boards.byId.length ? boards.byId[0] : boards.byId[nextIndex];
+    const nb = boards.all[nextBoardId];
+
+    parser.sample.pages[currentPage].entities = currentEntities;
+
+    return {
+        type: 'ENTITY::SET',
+        payload: {
+            boardId: nextBoardId,
+            entities: nb.entities
+        },
+    };
+};
 

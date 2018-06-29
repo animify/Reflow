@@ -11,5 +11,5 @@ export default combineReducers({
     canvas: canvasReducer,
     settings: settingsReducer,
     boards: boardsReducer,
-    doc: undoable(doc, { debug: false, filter: includeAction(['ENTITY::UPDATE', 'ENTITY::SET', 'DOCUMENT::DUPLICATE_SELECTED']) }),
+    doc: undoable(doc, { filter: includeAction(['ENTITY::UPDATE', 'ENTITY::SET', 'DOCUMENT::DUPLICATE_SELECTED']) }),
 });

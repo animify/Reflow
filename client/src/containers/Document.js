@@ -8,13 +8,15 @@ import Canvas from '../containers/Canvas';
 import PropertiesPane from '../containers/properties/PropertiesPane';
 import Toolbar from '../containers/toolbar/Toolbar';
 import LeftPanel from '../containers/leftPanel/LeftPanel';
-import { duplicateSelected, selectAllEntities } from '../store/actions';
+import { duplicateSelected, selectAllEntities, nextBoard } from '../store/actions';
 import Keys from '../../utils/hotkeys';
 
 const keyMap = {
     selectAll: 'mod+a',
     duplicate: 'mod+d',
     undo: 'mod+z',
+    prevBoard: 'mod+up',
+    nextBoard: 'mod+down',
     redo: 'mod+shift+z',
     mod: 'mod',
     move: 'm',
@@ -43,15 +45,17 @@ const mapDispatchToProps = dispatch => ({
     onUndo: () => dispatch(ActionCreators.undo()),
     onRedo: () => dispatch(ActionCreators.redo()),
     onDuplicate: () => dispatch(duplicateSelected()),
-    onSelectAll: () => dispatch(selectAllEntities())
+    onSelectAll: () => dispatch(selectAllEntities()),
+    switchNextBoard: () => dispatch(nextBoard()),
 });
 
-const Document = ({ onSelectAll, onUndo, onRedo, onDuplicate }) => {
+const Document = ({ onSelectAll, onUndo, onRedo, onDuplicate, switchNextBoard }) => {
     const handlers = {
         ...keyHandlers,
         selectAll: onSelectAll,
         undo: onUndo,
         redo: onRedo,
+        nextBoard: switchNextBoard,
         duplicate: (event) => {
             event.preventDefault();
             onDuplicate();
@@ -72,6 +76,7 @@ Document.propTypes = {
     onRedo: PropTypes.func.isRequired,
     onDuplicate: PropTypes.func.isRequired,
     onSelectAll: PropTypes.func.isRequired,
+    switchNextBoard: PropTypes.func.isRequired,
 };
 
 export default connect(

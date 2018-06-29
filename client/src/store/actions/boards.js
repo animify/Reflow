@@ -1,5 +1,8 @@
-export const duplicateBoard = (id, board) => ({
-    type: 'BOARD::DUPLICATE',
-    payload: { id, board }
+export const nextBoard = () => ({
+    type: 'BOARD::NEXT'
+});
+
+export const prevBoard = () => ({
+    type: 'BOARD::PREVIOUS'
 });
 
