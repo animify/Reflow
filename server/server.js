@@ -1,7 +1,7 @@
 import express from 'express';
 import Webpack from 'webpack';
 
-const config = require('../webpack.config.client');
+const config = require('../configs/webpack.config.client');
 const path = require('path');
 
 const app = express();
@@ -18,13 +18,6 @@ app.use(require('webpack-hot-middleware')(compiler, {
     path: '/__webpack_hmr',
     heartbeat: 10 * 1000
 }));
-
-
-app.get('/api', (req, res) => {
-    res.send({
-        message: 'You can also access routes defined in Express.'
-    });
-});
 
 app.get('*', (req, res) => {
     res.sendFile(path.resolve('client/local.html'));

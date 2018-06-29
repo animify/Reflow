@@ -8,7 +8,7 @@ import Screen from './Screen';
 import Shape from './Shape';
 import Image from './Image';
 import Link from './Link';
-import Keys from '../../utils/hotkeys';
+import Keys from '../../../utils/hotkeys';
 // import { checkVisible } from '../../utils/helpers';
 
 const entityMap = {

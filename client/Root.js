@@ -1,19 +1,15 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { Route, Switch } from 'react-router';
-import { ConnectedRouter } from 'react-router-redux';
-import store from './store';
-import { EditorPage } from './pages';
-import History from './modules/History';
+import { Route, Router, Switch } from 'react-router';
+import createHistory from 'history/createBrowserHistory';
+import EditorPage from './src/pages/EditorPage';
 
+const History = createHistory();
 const Root = () => (
-    <Provider store={store}>
-        <ConnectedRouter history={History}>
-            <Switch>
-                <Route exact path="/" component={EditorPage} />
-            </Switch>
-        </ConnectedRouter>
-    </Provider>
+    <Router history={History}>
+        <Switch>
+            <Route exact path="/" component={EditorPage} />
+        </Switch>
+    </Router>
 );
 
 export default Root;

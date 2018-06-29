@@ -1,7 +1,7 @@
 import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import parser from '../../parser';
+import parser from '../../../parser';
 
 const makeMapStateToProps = (initialState, initialProps) => {
     const boardId = initialProps.boardId;

@@ -4,10 +4,10 @@
   "description": "A simple server and client boilerplate built on React, Express, Webpack and styled by Blossom.",
   "main": "server/server.js",
   "scripts": {
-    "start:server": "rimraf ./dist && webpack --config  webpack.config.server.js",
-    "start:client": "webpack-dev-server --config webpack.config.client.js",
+    "start:server": "rimraf ./dist && webpack --config  configs/webpack.config.server.js",
+    "start:client": "webpack-dev-server --config configs/webpack.config.client.js",
     "start": "rimraf ./dist && npm-run-all --parallel start:server start:client",
-    "build": "webpack --config  webpack.prod.client.js",
+    "build": "webpack --config  configs/webpack.prod.client.js",
     "eslint": "eslint ."
   },
   "author": "Stefan Mansson <st.mansson@icloud.com> (http://mansson.io)",
@@ -36,6 +36,7 @@
     "react-svg-pan-zoom": "^2.17.0",
     "redux": "^3.0.4",
     "redux-undo": "^1.0.0-beta9-9-7",
+    "reselect": "^3.0.1",
     "rupture": "^0.6.2",
     "why-did-you-update": "^0.1.1"
   },

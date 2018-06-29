@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Board from './Board';
 import { setEntities } from '../../store/actions';
 import store from '../../store';
-import parser from '../../parser';
+import parser from '../../../parser';
 
 const mapStateToProps = state => ({
     boardList: state.boards.byId,

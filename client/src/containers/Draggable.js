@@ -41,7 +41,7 @@ export default class Draggable extends Component {
     // }
 
     // componentWillUnmount() {
-    //     window.cancelAnimationFrame(this.intvl);
+    //     clearInterval(this.intvl);
     // }
 
     componentWillReceiveProps(nextProps) {
@@ -57,14 +57,13 @@ export default class Draggable extends Component {
 
     // posMove = () => {
     //     this.setState((prevState) => ({
-    //         x: prevState.x + 15
+    //         x: prevState.x + (Math.random() - 0.5) * 200,
+    //         y: prevState.y + (Math.random() - 0.5) * 200
     //     }));
-
-    //     this.startMove();
     // }
 
     // startMove = () => {
-    //     this.intvl = window.requestAnimationFrame(this.posMove);
+    //     this.intvl = setInterval(this.posMove, 30)
     // }
 
     onDragStart = (e, coreData) => {

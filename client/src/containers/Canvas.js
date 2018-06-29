@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import Entities from './Entities';
 import Frames from './frames/Frames';
 import { pan, zoom, deselectAllEntities } from '../store/actions';
-import { scaleWheelDelta, clientPoint } from '../utils/helpers';
-import Keys from '../utils/hotkeys';
+import { scaleWheelDelta, clientPoint } from '../../utils/helpers';
+import Keys from '../../utils/hotkeys';
 
 const mapStateToProps = state => ({
     canvas: state.canvas,

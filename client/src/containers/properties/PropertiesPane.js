@@ -2,7 +2,7 @@ import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Property from './Property';
-import { filterCommonProperties } from '../../utils/filterFns';
+import { filterCommonProperties } from '../../../utils/filterFns';
 import { updateEntity } from '../../store/actions';
 
 const properties = {

@@ -1,6 +1,6 @@
 import React, { Fragment, PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { generateDiamondPath } from '../../utils/helpers';
+import { generateDiamondPath } from '../../../utils/helpers';
 
 export default class Shape extends PureComponent {
     generateShape = ({ style }) => {

@@ -9,7 +9,7 @@ import PropertiesPane from '../containers/properties/PropertiesPane';
 import Toolbar from '../containers/toolbar/Toolbar';
 import LeftPanel from '../containers/leftPanel/LeftPanel';
 import { duplicateSelected, selectAllEntities } from '../store/actions';
-import Keys from '../utils/hotkeys';
+import Keys from '../../utils/hotkeys';
 
 const keyMap = {
     selectAll: 'mod+a',

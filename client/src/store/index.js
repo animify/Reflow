@@ -1,17 +1,16 @@
 import React from 'react';
 import { createStore, applyMiddleware } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
 import History from '../modules/History';
 import rootReducer from './reducers';
-import dcmt from '../parser';
-import { rafScheduler } from '../utils/reduxMiddleware';
+import dcmt from '../../parser';
+import { rafScheduler } from '../../utils/reduxMiddleware';
 
 const middleware = routerMiddleware(History);
 let enhancer = null;
 
 if (process.env.NODE_ENV !== 'production') {
-    enhancer = composeWithDevTools(
+    enhancer = require('redux-devtools-extension').composeWithDevTools(
         applyMiddleware(middleware, rafScheduler)
     );
 } else {

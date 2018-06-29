@@ -1,10 +1,9 @@
-import sample from '../data/sample.json';
+import sample from './sample.json';
 
 console.log(sample);
 console.log(Object.keys(sample.pages[sample.currentPage].entities));
 
 export default {
-    sample,
     initialState: {
         settings: sample.settings,
         doc: {
