@@ -20,7 +20,7 @@ export default class Shape extends PureComponent {
                 )
             case 'diamond':
                 return (
-                    <path d={generateDiamondPath(entity.size)} />
+                    <path d={generateDiamondPath(entity.size)} style={style} />
                 )
         }
 
@@ -29,7 +29,7 @@ export default class Shape extends PureComponent {
     render() {
         const { entity } = this.props;
         const style = {
-            fill: entity.fillColor,
+            fill: '#fff',
             width: entity.size.w,
             height: entity.size.h,
         };

@@ -49,6 +49,13 @@ export const setEntities = (boardId, entities) => ({
     },
 });
 
+export const toggleTest = test => ({
+    type: 'TESTS::TOGGLE',
+    payload: {
+        test,
+    },
+});
+
 export const nextBoard = () => {
     const boards = store.getState().boards;
     const { entities: currentEntities, currentPage } = store.getState().doc.present;

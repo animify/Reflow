@@ -1,3 +1,4 @@
+const PrepackWebpackPlugin = require('prepack-webpack-plugin').default;
 const path = require('path');
 const webpack = require('webpack');
 const nib = require('nib');
@@ -12,12 +13,15 @@ module.exports = {
 
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'test'),
+        path: path.resolve(__dirname, '../test'),
         publicPath: '/dist',
     },
 
     devtool: 'inline-source-map',
-
+    mode: 'production',
+    optimization: {
+        minimize: true
+    },
     module: {
         rules: [
             {
@@ -57,7 +61,6 @@ module.exports = {
         new webpack.DefinePlugin({
             'process.env.NODE_ENV': JSON.stringify('production')
         }),
-        new webpack.optimize.UglifyJsPlugin(),
         new webpack.LoaderOptionsPlugin({
             options: {
                 stylus: {

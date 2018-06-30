@@ -47,16 +47,16 @@ class Canvas extends PureComponent {
             let multiplier = scaleWheelDelta(delta, e.ctrlKey, true);
             let futureScale = data.scale * multiplier;
 
-            if (futureScale >= 4) {
-                futureScale = 4;
+            if (futureScale >= 12) {
+                futureScale = 12;
                 multiplier = futureScale / data.scale;
             }
 
-            if (futureScale <= 0.05) {
-                futureScale = 0.05;
+            if (futureScale <= 0.01) {
+                futureScale = 0.01;
                 multiplier = futureScale / data.scale;
             }
-            if (futureScale <= 4 && futureScale >= 0.05) {
+            if (futureScale <= 12 && futureScale >= 0.01) {
                 const point = clientPoint(this.svgRenderer, { x: e.clientX, y: e.clientY }, data.matrix);
                 this.zoom(point, multiplier);
             }

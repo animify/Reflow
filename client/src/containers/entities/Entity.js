@@ -9,6 +9,7 @@ import Shape from './Shape';
 import Image from './Image';
 import Link from './Link';
 import Keys from '../../../utils/hotkeys';
+import * as tests from '../../../utils/interv';
 // import { checkVisible } from '../../utils/helpers';
 
 const entityMap = {
@@ -26,20 +27,20 @@ const entityMap = {
             draggable: true
         }
     },
-    image: {
-        component: Image,
-        options: {
-            resizable: true,
-            draggable: true
-        }
-    },
-    link: {
-        component: Link,
-        options: {
-            resizable: false,
-            draggable: false
-        }
-    }
+    // image: {
+    //     component: Image,
+    //     options: {
+    //         resizable: true,
+    //         draggable: true
+    //     }
+    // },
+    // link: {
+    //     component: Link,
+    //     options: {
+    //         resizable: false,
+    //         draggable: false
+    //     }
+    // }
 };
 
 
@@ -49,6 +50,7 @@ const makeMapStateToProps = (initialState, initialProps) => {
         return {
             entity: state.doc.present.entities[entityId],
             hovering: state.doc.present.hovering === entityId,
+            currentTest: state.doc.present.currentTest,
             isPresenting: state.canvas.presenting
         };
     };
@@ -70,8 +72,58 @@ const getEntityComponent = (type) => {
 };
 
 class Entity extends Component {
-    shouldComponentUpdate(nextProps) {
-        return this.props.entity.position.x !== nextProps.entity.position.x || this.props.entity.position.y !== nextProps.entity.position.y
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            x: props.entity.position.x,
+            y: props.entity.position.y,
+        }
+    }
+
+    intvl = null;
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return this.state.x !== nextState.x || this.state.y !== nextState.y || this.props.entity.position.x !== nextProps.entity.position.x || this.props.entity.position.y !== nextProps.entity.position.y
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.currentTest === 1) {
+            this.updatePosition();
+        } else {
+            this.clearIntvl();
+        }
+    }
+
+    componentWillMount() {
+        if (this.props.currentTest === 1) {
+            this.updatePosition();
+        }
+
+        if (this.props.currentTest === 0) {
+            this.clearIntvl();
+        }
+    }
+
+    clearIntvl() {
+        if (this.intvl !== null) {
+            clearInterval(this.intvl);
+            this.intvl = null;
+        }
+    }
+
+    componentWillUnmount() {
+        this.clearIntvl();
+    }
+
+    updatePosition = () => {
+        this.clearIntvl();
+        this.intvl = setInterval(() => {
+            this.setState((prevState) => ({
+                x: prevState.x + (Math.random() - 0.5) * 200,
+                y: prevState.y + (Math.random() - 0.5) * 200
+            }))
+        }, 30)
     }
 
     handlers = {
@@ -117,26 +169,34 @@ class Entity extends Component {
 
     render() {
         const { entity, hovering, isPresenting } = this.props;
+        const { x, y } = this.state;
         const entityOptions = getEntityComponent(entity.type);
-
         if (entityOptions === null) {
             return null;
         }
 
-        const Container = this.container;
+        const style = {
+            stroke: 'green',
+            strokeWidth: isPresenting ? 4 : 0
+        }
+        const translate = `translate(${x}, ${y})`
+        // const Container = this.container;
         const EntityComponent = entityOptions.component;
 
         return (
-            <Container draggable={entityOptions.options.draggable}>
-                <rect width={entity.size.w} height={entity.size.h} fill="transparent" />
+            <g transform={translate} style={style}>
+                {/* <Container draggable={entityOptions.options.draggable}> */}
+                {/* <rect width={entity.size.w} height={entity.size.h} fill="transparent" /> */}
                 <EntityComponent entity={entity} isPresenting={isPresenting} hovering={hovering} />
-            </Container>
+                {/* </Container> */}
+            </g >
         );
     }
 }
 
 Entity.propTypes = {
     entityId: PropTypes.string.isRequired,
+    currentTest: PropTypes.number.isRequired,
     entity: PropTypes.object.isRequired,
     hovering: PropTypes.bool.isRequired,
     isPresenting: PropTypes.bool.isRequired,

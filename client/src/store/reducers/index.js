@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { routerReducer } from 'react-router-redux';
 import undoable, { includeAction } from 'redux-undo';
 import doc from './docReducer';
 import settingsReducer from './settingsReducer';
@@ -7,7 +6,6 @@ import canvasReducer from './canvasReducer';
 import boardsReducer from './boardsReducer';
 
 export default combineReducers({
-    router: routerReducer,
     canvas: canvasReducer,
     settings: settingsReducer,
     boards: boardsReducer,

@@ -19,6 +19,8 @@ module.exports = {
         publicPath: '/dist',
     },
 
+    mode: 'development',
+
     devtool: 'inline-source-map',
 
     module: {

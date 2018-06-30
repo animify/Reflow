@@ -52,8 +52,8 @@ const doc = produce((draft, action) => {
                     ...draft.entities[entityId],
                     id: shortId,
                     position: {
-                        x: draft.entities[entityId].position.x + 75,
-                        y: draft.entities[entityId].position.y + 75,
+                        x: draft.entities[entityId].position.x + 250,
+                        y: draft.entities[entityId].position.y + 250,
                     }
                 };
 
@@ -73,6 +73,10 @@ const doc = produce((draft, action) => {
                 ...draft.entities[action.id],
                 ...action.payload
             };
+            break;
+
+        case 'TESTS::TOGGLE':
+            draft.currentTest = draft.currentTest === action.payload.test ? 0 : action.payload.test;
             break;
     }
 });

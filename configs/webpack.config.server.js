@@ -13,6 +13,7 @@ module.exports = {
     externals: [nodeExternals({
         whitelist: ['webpack/hot/poll?1000']
     })],
+    mode: 'development',
     module: {
         rules: [{
             test: /\.js?$/,
@@ -35,5 +36,4 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: 'server.js'
     }
-}
-    ;
+};
