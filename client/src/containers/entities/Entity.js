@@ -88,15 +88,15 @@ class Entity extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.currentTest === 1) {
+        if (nextProps.currentTest === 10) {
             this.updatePosition();
         } else {
             this.clearIntvl();
         }
     }
 
-    componentWillMount() {
-        if (this.props.currentTest === 1) {
+    componentDidMount() {
+        if (this.props.currentTest === 10) {
             this.updatePosition();
         }
 

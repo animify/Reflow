@@ -13,19 +13,20 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class Tests extends PureComponent {
-    toggleTest1 = () => this.props.switchTest(1);
-    toggleTest2 = () => this.props.switchTest(2);
-    isCurrentTest = num => this.props.currentTest === num;
+    toggleTest1 = () => this.props.switchTest(10);
+    toggleTest2 = () => this.props.switchTest(20);
 
     render() {
+        const isCurrentTest = num => this.props.currentTest === num;
+
         return (
             <Fragment>
                 <h5 className="layer-heading">Tests</h5>
                 <div className="layers">
-                    <div role="presentation" className={this.isCurrentTest(1) ? 'layer selected' : 'layer'} onClick={this.toggleTest1}>
+                    <div role="presentation" className={isCurrentTest(10) ? 'layer selected' : 'layer'} onClick={this.toggleTest1}>
                         <strong>Run Test 1</strong>
                     </div>
-                    <div role="presentation" className={this.isCurrentTest(2) ? 'layer selected' : 'layer'} onClick={this.toggleTest2}>
+                    <div role="presentation" className={isCurrentTest(20) ? 'layer selected' : 'layer'} onClick={this.toggleTest2}>
                         <strong>Run Test 2</strong>
                     </div>
                 </div>

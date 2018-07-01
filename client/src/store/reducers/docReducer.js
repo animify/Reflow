@@ -4,13 +4,12 @@ import cuid from 'cuid';
 const doc = produce((draft, action) => {
     switch (action.type) {
         case 'ENTITY::SET':
-            console.log(action.payload);
             draft.hovering = null;
             draft.selected.length = 0;
             draft.currentPage = action.payload.boardId;
+            draft.entities = action.payload.entities;
             draft.entitiesOrder.length = 0;
             draft.entitiesOrder = Object.keys(action.payload.entities);
-            draft.entities = action.payload.entities;
             break;
 
         case 'ENTITY::TOGGLE_SELECT':

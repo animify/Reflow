@@ -2,10 +2,11 @@ import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Board from './Board';
-import { setEntities } from '../../store/actions';
+import { setEntities, toggleTest } from '../../store/actions';
 import store from '../../store';
 import parser from '../../../parser';
 import { getCurrentTest, getCurrentPage, getBoardsOrder } from '../../selectors';
+import { delay } from '../../../utils/helpers';
 
 const makeMapStateToProps = initialState => {
     const boardList = getBoardsOrder(initialState);
@@ -19,14 +20,43 @@ const makeMapStateToProps = initialState => {
 const mapDispatchToProps = dispatch => ({
     changeBoard: (id, entities) => {
         const { entities: currentEntities, currentPage } = store.getState().doc.present;
-        dispatch(setEntities(id, entities));
         parser.sample.pages[currentPage].entities = currentEntities;
-    }
+        dispatch(setEntities(id, entities));
+    },
+    switchTest: num => dispatch(toggleTest(num)),
 });
+let testRunning = false;
 
 class Boards extends PureComponent {
     handleClick = (id, entities) => {
         this.props.changeBoard(id, entities);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.currentTest === 10 && !testRunning) {
+            testRunning = true;
+            this.runBoardTests();
+        }
+    }
+
+    runBoardTests = async () => {
+        for (const e in Array.from(Array(this.props.boardList.length))) {
+            this.goToNextBoard();
+            await delay(500);
+        }
+
+        testRunning = false;
+        this.props.switchTest(0);
+    }
+
+    goToNextBoard = () => {
+        const currentState = store.getState();
+        const currentPage = currentState.doc.present.currentPage;
+        const currentBoardIndex = this.props.boardList.findIndex(b => b === currentPage);
+        const nextBoardIndex = currentBoardIndex >= this.props.boardList.length - 1 ? 0 : currentBoardIndex + 1;
+        const nextBoardId = this.props.boardList[nextBoardIndex];
+        const nextBoardEntities = currentState.boards.all[nextBoardId].entities;
+        this.props.changeBoard(nextBoardId, nextBoardEntities);
     }
 
     render() {

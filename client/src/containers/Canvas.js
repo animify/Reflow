@@ -23,14 +23,6 @@ const mapDispatchToProps = dispatch => ({
     zoom: (matrix, multiplier) => dispatch(zoom(matrix, multiplier)),
 });
 class Canvas extends PureComponent {
-    constructor(props) {
-        super(props);
-
-        this.onWheel = this.onWheel.bind(this);
-        this.pan = this.pan.bind(this);
-        this.zoom = this.zoom.bind(this);
-    }
-
     componentDidMount() {
         this.svgRenderer.addEventListener('wheel', this.onWheel, { passive: true });
     }
@@ -39,7 +31,7 @@ class Canvas extends PureComponent {
         this.svgRenderer.removeEventListener('wheel', this.onWheel, { passive: true });
     }
 
-    onWheel(e) {
+    onWheel = (e) => {
         if (Keys.optionPressed) {
             const wD = e.wheelDelta;
             const dY = e.deltaY;
@@ -65,14 +57,14 @@ class Canvas extends PureComponent {
         }
     }
 
-    pan(x, y) {
+    pan = (x, y) => {
         window.requestAnimationFrame(() => {
             const newMatrix = this.props.matrix.translate(x, y);
             this.props.pan(newMatrix);
         });
     }
 
-    zoom(point, multiplier) {
+    zoom = (point, multiplier) => {
         window.requestAnimationFrame(() => {
             const newMatrix = this.props.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
             this.props.zoom(newMatrix, this.props.scale * multiplier);

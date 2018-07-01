@@ -90,4 +90,6 @@ export const generateDiamondPath = (size) => {
     const pointString = points.reduce((str, point) => (str += ` ${point.x},${point.y}`, str), '');
 
     return `M${pointString} z`;
-}
+};
+
+export const delay = time => new Promise(res => setTimeout(() => res(), time));
