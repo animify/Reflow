@@ -1,5 +1,5 @@
-import store from "..";
-import parser from "../../../parser";
+import store from '..';
+import parser from '../../../parser';
 
 export const updateEntity = (id, payload) => ({
     type: 'ENTITY::UPDATE',

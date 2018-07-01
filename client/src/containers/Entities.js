@@ -2,10 +2,10 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Entity from './entities/Entity';
-import * as tests from '../../utils/interv';
+import { getEntitiesOrder } from '../selectors';
 
 const mapStateToProps = state => ({
-    entitiesOrder: state.doc.present.entitiesOrder
+    entitiesOrder: getEntitiesOrder(state)
 });
 
 class Entities extends PureComponent {

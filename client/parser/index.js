@@ -14,7 +14,7 @@ export default {
         },
         boards: {
             all: sample.pages,
-            byId: Object.keys(sample.pages)
+            boardsOrder: Object.keys(sample.pages)
         }
     }
 };

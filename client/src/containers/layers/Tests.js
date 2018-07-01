@@ -2,9 +2,10 @@ import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { toggleTest } from '../../store/actions';
+import { getCurrentTest } from '../../selectors';
 
 const mapStateToProps = state => ({
-    currentTest: state.doc.present.currentTest,
+    currentTest: getCurrentTest(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -1,9 +1,10 @@
 import React, { Fragment, PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { getEntitiesOrder } from '../../selectors';
 
 const mapStateToProps = state => ({
-    entitiesLength: state.doc.present.entitiesOrder.length,
+    entitiesLength: getEntitiesOrder(state).length,
 });
 
 class Stats extends PureComponent {

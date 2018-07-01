@@ -1,17 +1,12 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { getEntity } from '../../selectors';
 
 const makeMapStateToProps = (initialState, initialProps) => {
-    const { entityId } = initialProps;
-    const mapStateToProps = (state) => {
-        const { entities } = state.doc.present;
-        const entity = entities[entityId];
-        return {
-            entity,
-        };
-    };
-    return mapStateToProps;
+    return state => ({
+        entity: getEntity(state, initialProps),
+    });
 };
 
 class Layer extends PureComponent {

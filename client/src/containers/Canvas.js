@@ -6,9 +6,11 @@ import Frames from './frames/Frames';
 import { pan, zoom, deselectAllEntities } from '../store/actions';
 import { scaleWheelDelta, clientPoint } from '../../utils/helpers';
 import Keys from '../../utils/hotkeys';
+import { getScale, getMatrix } from '../selectors';
 
 const mapStateToProps = state => ({
-    canvas: state.canvas,
+    scale: getScale(state),
+    matrix: getMatrix(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -38,49 +40,47 @@ class Canvas extends PureComponent {
     }
 
     onWheel(e) {
-        const data = this.props.canvas;
-
         if (Keys.optionPressed) {
             const wD = e.wheelDelta;
             const dY = e.deltaY;
             const delta = wD || dY * -1;
             let multiplier = scaleWheelDelta(delta, e.ctrlKey, true);
-            let futureScale = data.scale * multiplier;
+            let futureScale = this.props.scale * multiplier;
 
             if (futureScale >= 12) {
                 futureScale = 12;
-                multiplier = futureScale / data.scale;
+                multiplier = futureScale / this.props.scale;
             }
 
             if (futureScale <= 0.01) {
                 futureScale = 0.01;
-                multiplier = futureScale / data.scale;
+                multiplier = futureScale / this.props.scale;
             }
             if (futureScale <= 12 && futureScale >= 0.01) {
-                const point = clientPoint(this.svgRenderer, { x: e.clientX, y: e.clientY }, data.matrix);
+                const point = clientPoint(this.svgRenderer, { x: e.clientX, y: e.clientY }, this.props.matrix);
                 this.zoom(point, multiplier);
             }
         } else {
-            this.pan((e.deltaX * -1) / data.scale, (e.deltaY * -1) / data.scale);
+            this.pan((e.deltaX * -1) / this.props.scale, (e.deltaY * -1) / this.props.scale);
         }
     }
 
     pan(x, y) {
         window.requestAnimationFrame(() => {
-            const newMatrix = this.props.canvas.matrix.translate(x, y);
+            const newMatrix = this.props.matrix.translate(x, y);
             this.props.pan(newMatrix);
         });
     }
 
     zoom(point, multiplier) {
         window.requestAnimationFrame(() => {
-            const newMatrix = this.props.canvas.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
-            this.props.zoom(newMatrix, this.props.canvas.scale * multiplier);
+            const newMatrix = this.props.matrix.translate((1 - multiplier) * point.x, (1 - multiplier) * point.y).scale(multiplier);
+            this.props.zoom(newMatrix, this.props.scale * multiplier);
         });
     }
 
     render() {
-        const { canvas: { matrix }, deselectAll } = this.props;
+        const { matrix, deselectAll } = this.props;
 
         return (
             <Fragment>
@@ -100,7 +100,8 @@ class Canvas extends PureComponent {
 }
 
 Canvas.propTypes = {
-    canvas: PropTypes.object.isRequired,
+    scale: PropTypes.number.isRequired,
+    matrix: PropTypes.object.isRequired,
     pan: PropTypes.func.isRequired,
     zoom: PropTypes.func.isRequired,
     deselectAll: PropTypes.func.isRequired,

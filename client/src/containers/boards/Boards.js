@@ -5,11 +5,16 @@ import Board from './Board';
 import { setEntities } from '../../store/actions';
 import store from '../../store';
 import parser from '../../../parser';
+import { getCurrentTest, getCurrentPage, getBoardsOrder } from '../../selectors';
 
-const mapStateToProps = state => ({
-    boardList: state.boards.byId,
-    currentPage: state.doc.present.currentPage,
-});
+const makeMapStateToProps = initialState => {
+    const boardList = getBoardsOrder(initialState);
+    return state => ({
+        boardList,
+        currentTest: getCurrentTest(state),
+        currentPage: getCurrentPage(state)
+    });
+};
 
 const mapDispatchToProps = dispatch => ({
     changeBoard: (id, entities) => {
@@ -47,7 +52,7 @@ Boards.propTypes = {
 };
 
 export default connect(
-    mapStateToProps,
+    makeMapStateToProps,
     mapDispatchToProps
 )(Boards);
 

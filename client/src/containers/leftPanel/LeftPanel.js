@@ -7,9 +7,9 @@ import Tests from '../layers/Tests';
 const LeftPanel = () => (
     <aside id="left-panel">
         <Boards />
-        {/* <Layers /> */}
         <Stats />
         <Tests />
+        <Layers />
     </aside>
 );
 

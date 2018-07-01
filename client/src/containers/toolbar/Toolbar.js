@@ -2,11 +2,12 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { setPresenting } from '../../store/actions';
+import { getScale, getTitle, getIsPresenting } from '../../selectors';
 
 const mapStateToProps = state => ({
-    title: state.canvas.title,
-    scale: state.canvas.scale,
-    presenting: state.canvas.presenting,
+    title: getTitle(state),
+    scale: getScale(state),
+    isPresenting: getIsPresenting(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -16,14 +17,14 @@ const mapDispatchToProps = dispatch => ({
 
 class Toolbar extends PureComponent {
     render() {
-        const { title, scale, toggleEditorMode, togglePresentationMode, presenting } = this.props;
+        const { title, scale, toggleEditorMode, togglePresentationMode, isPresenting } = this.props;
         return (
             <section id="toolbar">
                 <div className="item title">{title}</div>
                 <div className="item scale">{(scale * 100).toFixed(2)}%</div>
                 <div className="item group end">
-                    <span role="presentation" className={presenting ? 'button tiny' : 'button tiny selected'} onClick={toggleEditorMode}>Editor</span>
-                    <span role="presentation" className={presenting ? 'button tiny selected' : 'button tiny'} onClick={togglePresentationMode}>Player</span>
+                    <span role="presentation" className={isPresenting ? 'button tiny' : 'button tiny selected'} onClick={toggleEditorMode}>Editor</span>
+                    <span role="presentation" className={isPresenting ? 'button tiny selected' : 'button tiny'} onClick={togglePresentationMode}>Player</span>
                 </div>
             </section>
         );
@@ -33,7 +34,7 @@ class Toolbar extends PureComponent {
 Toolbar.propTypes = {
     title: PropTypes.string.isRequired,
     scale: PropTypes.number.isRequired,
-    presenting: PropTypes.bool.isRequired,
+    isPresenting: PropTypes.bool.isRequired,
     toggleEditorMode: PropTypes.func.isRequired,
     togglePresentationMode: PropTypes.func.isRequired,
 };

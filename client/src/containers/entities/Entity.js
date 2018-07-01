@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Draggable from '../Draggable';
 import { toggleHoverEntity, toggleSelectEntity, updateEntity } from '../../store/actions';
-import store from '../../store';
 import Screen from './Screen';
 import Shape from './Shape';
 import Image from './Image';
 import Link from './Link';
 import Keys from '../../../utils/hotkeys';
-import * as tests from '../../../utils/interv';
+import { getEntity, getCurrentTest, getIsPresenting, getHovering } from '../../selectors/state';
 // import { checkVisible } from '../../utils/helpers';
 
 const entityMap = {
@@ -43,24 +42,21 @@ const entityMap = {
     // }
 };
 
-
 const makeMapStateToProps = (initialState, initialProps) => {
-    const { entityId } = initialProps;
-    const mapStateToProps = (state) => {
-        return {
-            entity: state.doc.present.entities[entityId],
-            hovering: state.doc.present.hovering === entityId,
-            currentTest: state.doc.present.currentTest,
-            isPresenting: state.canvas.presenting
-        };
-    };
-    return mapStateToProps;
-};
+    return state => ({
+        entity: getEntity(state, initialProps),
+        hovering: getHovering(state) === initialProps.entityId,
+        currentTest: getCurrentTest(state),
+        isPresenting: getIsPresenting(state)
+    });
+}
 
-const mapDispatchToProps = (dispatch, ownProps) => ({
-    onMouseEnter: () => dispatch(toggleHoverEntity(ownProps.entityId, true)),
-    onMouseLeave: () => dispatch(toggleHoverEntity(ownProps.entityId, false)),
-    onMouseDown: () => dispatch(toggleSelectEntity(ownProps.entityId, true, !Keys.cmdPressed)),
+
+const mapDispatchToProps = dispatch => ({
+    onMouseEnter: entityId => dispatch(toggleHoverEntity(entityId, true)),
+    onMouseLeave: entityId => dispatch(toggleHoverEntity(entityId, false)),
+    onMouseDown: entityId => dispatch(toggleSelectEntity(entityId, true, !Keys.cmdPressed)),
+    updateEntityProps: (entityId, data) => dispatch(updateEntity(entityId, data)),
 });
 
 const getEntityComponent = (type) => {
@@ -84,7 +80,11 @@ class Entity extends Component {
     intvl = null;
 
     shouldComponentUpdate(nextProps, nextState) {
-        return this.state.x !== nextState.x || this.state.y !== nextState.y || this.props.entity.position.x !== nextProps.entity.position.x || this.props.entity.position.y !== nextProps.entity.position.y
+        return this.state.x !== nextState.x ||
+            this.state.y !== nextState.y ||
+            this.props.entity.position.x !== nextProps.entity.position.x ||
+            this.props.entity.position.y !== nextProps.entity.position.y ||
+            this.props.isPresenting !== nextProps.isPresenting
     }
 
     componentWillReceiveProps(nextProps) {
@@ -130,29 +130,34 @@ class Entity extends Component {
         isDragging: false,
         onMouseDown: (e) => {
             e.stopPropagation();
-            this.props.onMouseDown();
+            this.props.onMouseDown(this.props.entityId);
+        },
+        onMouseEnter: (e) => {
+            this.props.onMouseEnter(this.props.entityId);
+        },
+        onMouseLeave: (e) => {
+            this.props.onMouseLeave(this.props.entityId);
         },
         onStart: () => {
             this.handlers.isDragging = true;
         },
-        onDrag: () => {
-        },
+        onDrag: () => { },
         onStop: (e, data) => {
             this.handlers.isDragging = false;
-            store.dispatch(updateEntity(this.props.entityId, { position: { x: data.x, y: data.y } }));
+            this.props.updateEntityProps(this.props.entityId, { position: { x: data.x, y: data.y } });
         }
     };
 
     container = ({ children, draggable }) => {
-        const { entity, onMouseEnter, onMouseLeave, isPresenting } = this.props;
+        const { entity, isPresenting } = this.props;
 
         return (draggable ?
             <Draggable
                 grid={null}
                 disabled={isPresenting || Boolean(entity.locked)}
                 position={entity.position}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
+                onMouseEnter={this.handlers.onMouseEnter}
+                onMouseLeave={this.handlers.onMouseLeave}
                 onMouseDown={this.handlers.onMouseDown}
                 onStart={this.handlers.onStart}
                 onDrag={this.handlers.onDrag}
@@ -177,16 +182,18 @@ class Entity extends Component {
 
         const style = {
             stroke: 'green',
-            strokeWidth: isPresenting ? 4 : 0
+            strokeWidth: isPresenting ? 4 : 0,
+            width: entity.size.w + 4,
+            height: entity.size.h + 4,
         }
         const translate = `translate(${x}, ${y})`
         // const Container = this.container;
         const EntityComponent = entityOptions.component;
 
         return (
-            <g transform={translate} style={style}>
+            <g transform={translate} onMouseEnter={this.handlers.onMouseEnter} onMouseLeave={this.handlers.onMouseLeave}>
                 {/* <Container draggable={entityOptions.options.draggable}> */}
-                {/* <rect width={entity.size.w} height={entity.size.h} fill="transparent" /> */}
+                <rect fill="transparent" style={style} x="-2" y="-2" />
                 <EntityComponent entity={entity} isPresenting={isPresenting} hovering={hovering} />
                 {/* </Container> */}
             </g >

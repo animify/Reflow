@@ -3,10 +3,11 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Layer from './Layer';
 import { toggleHoverEntity, toggleSelectEntity } from '../../store/actions';
+import { getEntitiesOrder, getSelected } from '../../selectors';
 
 const mapStateToProps = state => ({
-    entitiesOrder: state.doc.present.entitiesOrder,
-    selectedEntities: state.doc.present.selected,
+    entitiesOrder: getEntitiesOrder(state),
+    selectedEntities: getSelected(state),
 });
 
 const mapDispatchToProps = dispatch => ({

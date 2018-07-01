@@ -31,7 +31,7 @@ export default class Screen extends Component {
 
         return (
             <Fragment>
-                <image xlinkHref={entity.source.id} />
+                <image xlinkHref={entity.source.id} width={entity.size.w} height={entity.size.h} />
                 {(!isPresenting && hovering) && innerElements.map(ie => (
                     <rect
                         key={ie.id}

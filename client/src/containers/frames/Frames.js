@@ -2,11 +2,12 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import Frame from './Frame';
+import { getHovering, getSelected, getScale } from '../../selectors';
 
 const mapStateToProps = state => ({
-    selectedEntities: state.doc.present.selected,
-    hoveringEntity: state.doc.present.hovering,
-    scale: state.canvas.scale
+    selectedEntities: getSelected(state),
+    hoveringEntity: getHovering(state),
+    scale: getScale(state)
 });
 
 class Frames extends PureComponent {

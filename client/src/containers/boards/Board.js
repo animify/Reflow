@@ -2,16 +2,13 @@ import React, { Fragment, Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import parser from '../../../parser';
+import { getBoard } from '../../selectors';
 
 const makeMapStateToProps = (initialState, initialProps) => {
-    const boardId = initialProps.boardId;
-    const board = initialState.boards.all[boardId];
-    const mapStateToProps = () => {
-        return {
-            board,
-        };
-    };
-    return mapStateToProps;
+    const board = getBoard(initialState, initialProps);
+    return () => ({
+        board
+    });
 };
 
 class Board extends Component {

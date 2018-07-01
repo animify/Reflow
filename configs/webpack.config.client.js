@@ -3,20 +3,28 @@ const webpack = require('webpack');
 const nib = require('nib');
 const jeet = require('jeet');
 const rupture = require('rupture');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: [
-        'babel-polyfill',
         'react-hot-loader/patch',
-        'webpack-hot-middleware/client?http://0.0.0.0:3001/',
+        'webpack-dev-server/client?http://localhost:3001',
         'webpack/hot/only-dev-server',
-        './client/index.js',
+        './client/index.js'
     ],
 
     output: {
-        filename: 'bundle.js',
-        path: __dirname,
-        publicPath: '/dist',
+        filename: '[name].[hash].js',
+        path: `${__dirname}/dist`,
+        publicPath: 'http://localhost:3000/'
+    },
+
+    optimization: {
+        splitChunks: {
+            chunks: 'all',
+            name: false
+        },
+        runtimeChunk: true,
     },
 
     mode: 'development',
@@ -62,6 +70,9 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
+        new HtmlWebpackPlugin({
+            template: 'client/local.html'
+        }),
         new webpack.LoaderOptionsPlugin({
             options: {
                 stylus: {
