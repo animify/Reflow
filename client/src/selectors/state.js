@@ -8,6 +8,7 @@ export const getBoard = (state, props) => getBoards(state)[props.boardId];
 
 export const getCurrentTest = state => state.doc.present.currentTest;
 export const getCurrentPage = state => state.doc.present.currentPage;
+export const getCurrentInterval = state => state.timer;
 export const getHovering = state => state.doc.present.hovering;
 export const getSelected = state => state.doc.present.selected;
 

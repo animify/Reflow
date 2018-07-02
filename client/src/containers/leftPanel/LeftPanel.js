@@ -9,7 +9,7 @@ const LeftPanel = () => (
         <Boards />
         <Stats />
         <Tests />
-        <Layers />
+        {/* <Layers /> */}
     </aside>
 );
 

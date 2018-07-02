@@ -4,6 +4,7 @@ export default {
     sample,
     initialState: {
         settings: sample.settings,
+        timer: 0,
         doc: {
             currentPage: sample.currentPage,
             entitiesOrder: Object.keys(sample.pages[sample.currentPage].entities),

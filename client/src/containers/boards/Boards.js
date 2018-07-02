@@ -7,6 +7,7 @@ import store from '../../store';
 import parser from '../../../parser';
 import { getCurrentTest, getCurrentPage, getBoardsOrder } from '../../selectors';
 import { delay } from '../../../utils/helpers';
+import { ActionCreators } from 'redux-undo';
 
 const makeMapStateToProps = initialState => {
     const boardList = getBoardsOrder(initialState);
@@ -33,16 +34,31 @@ class Boards extends PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.currentTest === 10 && !testRunning) {
+        if (nextProps.currentTest === 20 && !testRunning) {
             testRunning = true;
             this.runBoardTests();
+        }
+
+        if (nextProps.currentTest === 21 && !testRunning) {
+            testRunning = true;
+            this.undoBoardTests();
         }
     }
 
     runBoardTests = async () => {
         for (const e in Array.from(Array(this.props.boardList.length))) {
             this.goToNextBoard();
-            await delay(500);
+            await delay(120);
+        }
+
+        testRunning = false;
+        this.props.switchTest(21);
+    }
+
+    undoBoardTests = async () => {
+        for (const e in Array.from(Array(this.props.boardList.length))) {
+            store.dispatch(ActionCreators.undo());
+            await delay(120);
         }
 
         testRunning = false;

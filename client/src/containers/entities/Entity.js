@@ -8,7 +8,8 @@ import Shape from './Shape';
 import Image from './Image';
 import Link from './Link';
 import Keys from '../../../utils/hotkeys';
-import { getEntity, getCurrentTest, getIsPresenting, getHovering } from '../../selectors/state';
+import { getEntity, getCurrentTest, getCurrentInterval, getIsPresenting, getHovering } from '../../selectors/state';
+import store from '../../store';
 // import { checkVisible } from '../../utils/helpers';
 
 const entityMap = {
@@ -47,6 +48,7 @@ const makeMapStateToProps = (initialState, initialProps) => {
         entity: getEntity(state, initialProps),
         hovering: getHovering(state) === initialProps.entityId,
         currentTest: getCurrentTest(state),
+        currentInterval: getCurrentInterval(state),
         isPresenting: getIsPresenting(state)
     });
 }
@@ -78,6 +80,8 @@ class Entity extends Component {
     }
 
     intvl = null;
+    updated = false;
+
 
     shouldComponentUpdate(nextProps, nextState) {
         return this.state.x !== nextState.x ||
@@ -88,42 +92,28 @@ class Entity extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.currentTest === 10) {
+        if (this.props.currentInterval !== nextProps.currentInterval) {
             this.updatePosition();
+            return;
+        }
+
+        if (nextProps.currentTest === 11 && !this.updated) {
+            this.updated = true;
+            store.dispatch(updateEntity(this.props.entityId, { position: { x: this.state.x + (Math.random() - 0.5) * 200, y: this.state.y + (Math.random() - 0.5) * 200 } }));
         } else {
-            this.clearIntvl();
+            this.setState({
+                x: nextProps.entity.position.x,
+                y: nextProps.entity.position.y
+            });
+            this.updated = false;
         }
-    }
-
-    componentDidMount() {
-        if (this.props.currentTest === 10) {
-            this.updatePosition();
-        }
-
-        if (this.props.currentTest === 0) {
-            this.clearIntvl();
-        }
-    }
-
-    clearIntvl() {
-        if (this.intvl !== null) {
-            clearInterval(this.intvl);
-            this.intvl = null;
-        }
-    }
-
-    componentWillUnmount() {
-        this.clearIntvl();
     }
 
     updatePosition = () => {
-        this.clearIntvl();
-        this.intvl = setInterval(() => {
-            this.setState((prevState) => ({
-                x: prevState.x + (Math.random() - 0.5) * 200,
-                y: prevState.y + (Math.random() - 0.5) * 200
-            }))
-        }, 30)
+        this.setState({
+            x: this.state.x + (Math.random() - 0.5) * 200,
+            y: this.state.y + (Math.random() - 0.5) * 200
+        });
     }
 
     handlers = {
@@ -148,29 +138,29 @@ class Entity extends Component {
         }
     };
 
-    container = ({ children, draggable }) => {
-        const { entity, isPresenting } = this.props;
+    // container = ({ children, draggable }) => {
+    //     const { entity, isPresenting } = this.props;
 
-        return (draggable ?
-            <Draggable
-                grid={null}
-                disabled={isPresenting || Boolean(entity.locked)}
-                position={entity.position}
-                onMouseEnter={this.handlers.onMouseEnter}
-                onMouseLeave={this.handlers.onMouseLeave}
-                onMouseDown={this.handlers.onMouseDown}
-                onStart={this.handlers.onStart}
-                onDrag={this.handlers.onDrag}
-                onStop={this.handlers.onStop}
-                scale={1}
-            >
-                {children}
-            </Draggable> :
-            <g>
-                {children}
-            </g>
-        )
-    };
+    //     return (draggable ?
+    //         <Draggable
+    //             grid={null}
+    //             disabled={isPresenting || Boolean(entity.locked)}
+    //             position={entity.position}
+    //             onMouseEnter={this.handlers.onMouseEnter}
+    //             onMouseLeave={this.handlers.onMouseLeave}
+    //             onMouseDown={this.handlers.onMouseDown}
+    //             onStart={this.handlers.onStart}
+    //             onDrag={this.handlers.onDrag}
+    //             onStop={this.handlers.onStop}
+    //             scale={1}
+    //         >
+    //             {children}
+    //         </Draggable> :
+    //         <g>
+    //             {children}
+    //         </g>
+    //     )
+    // };
 
     render() {
         const { entity, hovering, isPresenting } = this.props;
